@@ -1,0 +1,105 @@
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import 'tailwindcss';
+
+:root {
+  --color-bg: #F7F6F2;
+  --color-surface: #FFFFFF;
+  --color-raised: #F1EFE8;
+  --color-border: #E2DED3;
+  --color-border-strong: #C9C4B6;
+  --color-text: #14181D;
+  --color-muted: #5B6672;
+  --color-primary: #12233A;
+  --color-primary-hover: #1B3252;
+  --color-on-primary: #FFFFFF;
+  --color-amber: #F2B54A;
+  --color-amber-text: #8A5A00;
+  --color-known: #0F766E;
+  --color-known-bg: #E6F4F1;
+  --color-probable: #1D5FA8;
+  --color-probable-bg: #E8F0FA;
+  --color-outdated: #8A5A00;
+  --color-outdated-bg: #FBF1DC;
+  --color-unknown: #5E5780;
+  --color-unknown-bg: #EEECF5;
+  --color-infeasible: #A12828;
+  --shadow-raised: 0 1px 2px rgba(20,24,29,.06), 0 8px 24px rgba(20,24,29,.06);
+  --font-sans: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-card: 12px;
+  --radius-button: 10px;
+  --space-page: 32px;
+  --space-module: 32px;
+  --space-card: 24px;
+  --space-card-hero: 32px;
+  --space-card-title: 16px;
+  --space-row: 12px;
+  --size-row: 56px;
+}
+
+@theme inline {
+  --color-noctra-bg: var(--color-bg);
+  --color-noctra-surface: var(--color-surface);
+  --color-noctra-raised: var(--color-raised);
+  --color-noctra-border: var(--color-border);
+  --color-noctra-border-strong: var(--color-border-strong);
+  --color-noctra-border-subtle: var(--color-border);
+  --color-noctra-text: var(--color-text);
+  --color-noctra-muted: var(--color-muted);
+  --color-noctra-dim: var(--color-muted);
+  --color-noctra-primary: var(--color-primary);
+  --color-noctra-primary-hover: var(--color-primary-hover);
+  --color-noctra-accent: var(--color-amber);
+  --color-noctra-accent-text: var(--color-amber-text);
+  --color-noctra-accent-hover: var(--color-primary-hover);
+  --color-noctra-accent-dim: var(--color-outdated-bg);
+  --color-noctra-known: var(--color-known);
+  --color-noctra-probable: var(--color-probable);
+  --color-noctra-outdated: var(--color-outdated);
+  --color-noctra-unknown: var(--color-unknown);
+  --color-noctra-robust: var(--color-known);
+  --color-noctra-at-risk: var(--color-outdated);
+  --color-noctra-infeasible: var(--color-infeasible);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius-md: var(--radius-button);
+  --radius-lg: var(--radius-card);
+  --shadow-preview: var(--shadow-raised);
+}
+
+/* Add the future .dark token overrides here; components stay unchanged. */
+
+* { border-color: var(--color-border); }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+p { max-width: 65ch; }
+a, button { -webkit-tap-highlight-color: transparent; }
+button, a { touch-action: manipulation; }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+::selection { background: var(--color-amber); color: var(--color-text); }
+.font-mono-nums { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.lamp-glow, .lamp-glow-subtle { box-shadow: none; }
+.night-stars-bg { background-color: var(--color-bg); }
+
+@media (max-width: 1023px) { :root { --space-module: 24px; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
