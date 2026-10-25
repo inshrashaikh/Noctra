@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "pnpm --filter @noctra/web dev",
     "build": "pnpm --filter @noctra/contracts build && pnpm --filter @noctra/web build",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm --filter @noctra/contracts build && pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter @noctra/web test:e2e",
