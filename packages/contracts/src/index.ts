@@ -32,6 +32,9 @@ export {
   SourceClassSchema,
   TierSchema,
   ServiceKindSchema,
+  NeedTypeSchema,
+  OpeningStatusSchema,
+  ServicesResponseSchema,
   FactTypeSchema,
 } from './schemas.js';
 
@@ -58,6 +61,9 @@ export type {
   SourceClass,
   Tier,
   ServiceKind,
+  NeedType,
+  OpeningStatus,
+  ServicesResponse,
   FactType,
 } from './schemas.js';
 

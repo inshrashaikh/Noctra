@@ -10,11 +10,12 @@ import type {
 import type { PlanService } from '../planService';
 import type { AlertEvent } from '@/types/domain';
 import { NURSE_PLAN_RESPONSE } from '@/mocks/fixtures/nurse-2-15am';
-import { SERVICES_FIXTURE } from '@/mocks/fixtures/services';
 import { STATUS_FIXTURE } from '@/mocks/fixtures/status';
 import { applyClosureScenario } from '@/mocks/fixtures/closure-scenario';
 import { applyRideUnknownScenario } from '@/mocks/fixtures/ride-unknown';
 import { TIER_2_PLAN_RESPONSE, TIER_2_STATUS } from '@/mocks/fixtures/tier-2';
+import { generatePlan } from '@/lib/transportEngine';
+import { findAndRankServices } from '@/lib/servicesEngine';
 
 class MockPlanServiceImpl implements PlanService {
   private currentPlan: PlanResponse = structuredClone(NURSE_PLAN_RESPONSE);
@@ -22,26 +23,35 @@ class MockPlanServiceImpl implements PlanService {
   private alertListeners: Set<(alert: AlertEvent) => void> = new Set();
   private simulatedTimeOffsetMin = 0;
 
-  async plan(_req: PlanRequest): Promise<PlanResponse> {
+  async plan(req: PlanRequest): Promise<PlanResponse> {
     // Artificial small delay for realistic UX feeling
-    await new Promise((r) => setTimeout(r, 120));
+    await new Promise((r) => setTimeout(r, 80));
+    this.currentPlan = generatePlan(req);
     return structuredClone(this.currentPlan);
   }
 
   async replan(req: ReplanRequest): Promise<PlanResponse> {
-    await new Promise((r) => setTimeout(r, 150));
+    await new Promise((r) => setTimeout(r, 100));
+    this.currentPlan = generatePlan(req);
     if (req.reason?.includes('closure')) {
-      this.currentPlan = applyClosureScenario();
+      for (const c of this.currentPlan.candidates) {
+        if (c.mode === 'auto') {
+          c.status = 'AT_RISK';
+          c.reject_reasons.push('Road closure on Wardha Road underpass; detour adds 6m');
+          c.eta.expected_min += 6;
+          c.eta.pessimistic_min += 10;
+          c.slack_min.expected -= 6;
+          c.slack_min.pessimistic -= 10;
+        }
+      }
     }
     return structuredClone(this.currentPlan);
   }
 
   async getServices(req: ServicesRequest): Promise<Service[]> {
-    await new Promise((r) => setTimeout(r, 80));
-    if (!req.kinds || req.kinds.length === 0) {
-      return structuredClone(SERVICES_FIXTURE);
-    }
-    return SERVICES_FIXTURE.filter((s) => req.kinds!.includes(s.kind));
+    await new Promise((r) => setTimeout(r, 60));
+    const result = findAndRankServices(req);
+    return structuredClone(result.services);
   }
 
   async getStatus(): Promise<StatusResponse> {

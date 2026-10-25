@@ -14,11 +14,18 @@ const NAGPUR_LOCATIONS = [
 ];
 
 const MODES: { id: TransportMode; label: string; icon: React.FC<{ className?: string }> }[] = [
+  { id: 'transit', label: 'Metro/Bus', icon: Bus },
   { id: 'auto', label: 'Auto', icon: Car },
   { id: 'two_wheeler', label: 'Bike', icon: Bike },
   { id: 'cab', label: 'Cab', icon: Car },
   { id: 'walk', label: 'Walk', icon: Footprints },
-  { id: 'transit', label: 'Metro', icon: Bus },
+];
+
+export const SHIFT_PRESETS = [
+  { id: 'evening', label: 'Evening', shift: '22:00', deadline: '22:45', desc: 'Metro + Bus active' },
+  { id: 'midnight', label: 'Midnight', shift: '00:00', deadline: '00:45', desc: 'Night bus only' },
+  { id: 'late_night', label: '2:15 AM', shift: '02:15', deadline: '03:00', desc: 'Transit closed, Auto' },
+  { id: 'early_morning', label: '4:30 AM', shift: '04:30', deadline: '05:30', desc: 'Trains / Standby' },
 ];
 
 interface JourneyFormProps {
@@ -28,7 +35,13 @@ interface JourneyFormProps {
 
 export function JourneyForm({ onSubmit, isLoading }: JourneyFormProps) {
   const { pickMode, setPickMode } = useJourneyStore();
-  const [selectedModes, setSelectedModes] = useState<TransportMode[]>(['auto', 'two_wheeler', 'walk']);
+  const [selectedModes, setSelectedModes] = useState<TransportMode[]>([
+    'transit',
+    'auto',
+    'two_wheeler',
+    'cab',
+    'walk',
+  ]);
   const [origin, setOrigin] = useState(NAGPUR_LOCATIONS[0]);
   const [destination, setDestination] = useState(NAGPUR_LOCATIONS[1]);
   const [shiftEnd, setShiftEnd] = useState('02:15');
@@ -41,6 +54,23 @@ export function JourneyForm({ onSubmit, isLoading }: JourneyFormProps) {
     );
   };
 
+  const handlePresetClick = (newShift: string, newDeadline: string) => {
+    setShiftEnd(newShift);
+    setDeadline(newDeadline);
+    setError(null);
+    onSubmit({
+      originAddress: origin.name,
+      originLat: origin.lat,
+      originLon: origin.lon,
+      destinationAddress: destination.name,
+      destinationLat: destination.lat,
+      destinationLon: destination.lon,
+      shiftEndTime: newShift,
+      deadlineTime: newDeadline,
+      modes: selectedModes,
+    });
+  };
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -50,7 +80,13 @@ export function JourneyForm({ onSubmit, isLoading }: JourneyFormProps) {
       return;
     }
 
-    if (shiftEnd >= deadline) {
+    const [sh, sm] = shiftEnd.split(':').map(Number);
+    const [dh, dm] = deadline.split(':').map(Number);
+    const startM = sh * 60 + sm;
+    let endM = dh * 60 + dm;
+    if (endM <= startM) endM += 1440;
+
+    if (startM === endM) {
       setError('Deadline must be strictly after shift end time');
       return;
     }
@@ -70,6 +106,36 @@ export function JourneyForm({ onSubmit, isLoading }: JourneyFormProps) {
 
   return (
     <form onSubmit={handleFormSubmit} className="space-y-4">
+      {/* Demo Shift Presets */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold uppercase tracking-wider text-noctra-muted flex items-center justify-between">
+          <span>Shift Window Presets</span>
+          <span className="text-[10px] text-noctra-accent font-mono">1-Click Test</span>
+        </label>
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+          {SHIFT_PRESETS.map((p) => {
+            const isCurrent = shiftEnd === p.shift && deadline === p.deadline;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => handlePresetClick(p.shift, p.deadline)}
+                className={cn(
+                  'rounded-lg border p-2 text-left transition-all select-none',
+                  isCurrent
+                    ? 'border-noctra-accent bg-noctra-accent/15 text-noctra-text shadow-sm'
+                    : 'border-noctra-border bg-noctra-surface hover:bg-noctra-raised text-noctra-muted'
+                )}
+              >
+                <div className="font-mono text-xs font-bold text-noctra-accent">{p.shift}</div>
+                <div className="text-[10px] text-noctra-text font-medium mt-0.5">{p.label}</div>
+                <div className="text-[9px] text-noctra-muted leading-tight truncate">{p.desc}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Origin */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold uppercase tracking-wider text-noctra-muted flex items-center justify-between">
@@ -181,7 +247,7 @@ export function JourneyForm({ onSubmit, isLoading }: JourneyFormProps) {
                 className={cn(
                   'flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all select-none border min-h-[44px]',
                   active
-                    ? 'border-noctra-accent bg-noctra-accent/15 text-noctra-accent'
+                    ? 'border-noctra-accent bg-noctra-accent/15 text-noctra-accent font-semibold'
                     : 'border-noctra-border bg-noctra-surface text-noctra-muted hover:border-noctra-muted'
                 )}
               >

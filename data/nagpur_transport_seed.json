@@ -1,0 +1,361 @@
+{
+  "dataset_version": "1.0.0-seed",
+  "city": "Nagpur, Maharashtra, India",
+  "generated_for": "CASCADE '26 Noctra Night-Time Engine",
+  "disclaimer": "Seed timetables are plausible representations of Nagpur transit for demonstration and validation. All records are marked verify_against_official=true and must never be treated as official or live.",
+  "services": [
+    {
+      "id": "metro-orange-line",
+      "mode": "transit",
+      "transit_type": "metro",
+      "name": "Nagpur Metro Orange Line (North-South)",
+      "route_corridor": "Automotive Square ↔ Khapri / AIIMS via Sitabuldi",
+      "operating_window": {
+        "start": "06:00",
+        "end": "22:30"
+      },
+      "first_departure": "06:00",
+      "last_departure": "22:15",
+      "frequency_min": 15,
+      "discrete_departures": null,
+      "stations": [
+        "Automotive Square",
+        "Nari Road",
+        "Indora Square",
+        "Kadbi Chowk",
+        "GaddiGodam Square",
+        "Kasturchand Park",
+        "Sitabuldi Interchange",
+        "Congress Nagar",
+        "Rahate Colony",
+        "Ajni Square",
+        "Chhatrapati Square",
+        "Jaiprakash Nagar",
+        "Ujjwal Nagar",
+        "Airport",
+        "Airport South",
+        "New Airport",
+        "Khapri / AIIMS Metro"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹20 - ₹50",
+        "is_estimate": true,
+        "note": "Standard Maha Metro smartcard/token fare table"
+      },
+      "source_class": "static",
+      "source_note": "Maha Metro Nagpur published timetable baseline (synthesised for hackathon)",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-20T00:00:00+05:30"
+    },
+    {
+      "id": "metro-aqua-line",
+      "mode": "transit",
+      "transit_type": "metro",
+      "name": "Nagpur Metro Aqua Line (East-West)",
+      "route_corridor": "Prajapati Nagar ↔ Lokmanya Nagar via Sitabuldi & Dharampeth",
+      "operating_window": {
+        "start": "06:15",
+        "end": "22:15"
+      },
+      "first_departure": "06:15",
+      "last_departure": "22:00",
+      "frequency_min": 15,
+      "discrete_departures": null,
+      "stations": [
+        "Prajapati Nagar",
+        "Vaishno Devi Chowk",
+        "Ambedkar Chowk",
+        "Telephone Exchange",
+        "Chitar Oli Chowk",
+        "Agrasen Chowk",
+        "Dosar Vaishya Chowk",
+        "Nagpur Railway Station Metro",
+        "Cotton Market",
+        "Sitabuldi Interchange",
+        "Jhansi Rani Square",
+        "Institution of Engineers",
+        "Shankar Nagar Square",
+        "LAD Square / Dharampeth",
+        "Dharampeth College",
+        "Subhash Nagar",
+        "Rachana Ring Road",
+        "Vasudev Nagar",
+        "Bansi Nagar",
+        "Lokmanya Nagar"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹20 - ₹45",
+        "is_estimate": true,
+        "note": "Standard Maha Metro smartcard/token fare table"
+      },
+      "source_class": "static",
+      "source_note": "Maha Metro Nagpur published timetable baseline (synthesised for hackathon)",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-20T00:00:00+05:30"
+    },
+    {
+      "id": "aapli-bus-day-5",
+      "mode": "transit",
+      "transit_type": "city_bus",
+      "name": "Aapli Bus Route 5 (Sitabuldi ↔ AIIMS / MIHAN)",
+      "route_corridor": "Sitabuldi Interchange ↔ Medical Square ↔ Ajni ↔ MIHAN / AIIMS",
+      "operating_window": {
+        "start": "06:00",
+        "end": "21:45"
+      },
+      "first_departure": "06:00",
+      "last_departure": "21:15",
+      "frequency_min": 25,
+      "discrete_departures": null,
+      "stops": [
+        "Sitabuldi Interchange",
+        "Rahate Colony",
+        "Medical Square (GMC/AIIMS link)",
+        "Ajni Railway Overbridge",
+        "Chhatrapati Square",
+        "Airport T-Point",
+        "MIHAN / AIIMS Complex"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹15 - ₹30",
+        "is_estimate": true,
+        "note": "NMC Aapli Bus stage fares"
+      },
+      "source_class": "static",
+      "source_note": "Nagpur Mahanagar Parivahan Ltd (NMPL) published daytime stage schedule",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-20T00:00:00+05:30"
+    },
+    {
+      "id": "aapli-bus-day-10",
+      "mode": "transit",
+      "transit_type": "city_bus",
+      "name": "Aapli Bus Route 10 (Sitabuldi ↔ Dharampeth / Hingna)",
+      "route_corridor": "Sitabuldi Interchange ↔ Law College ↔ Dharampeth ↔ Ambazari",
+      "operating_window": {
+        "start": "06:00",
+        "end": "21:30"
+      },
+      "first_departure": "06:00",
+      "last_departure": "21:00",
+      "frequency_min": 20,
+      "discrete_departures": null,
+      "stops": [
+        "Sitabuldi Interchange",
+        "Variety Square",
+        "LIC Square",
+        "Law College Square",
+        "Dharampeth Residential Area",
+        "Ambazari Garden",
+        "Hingna Naka"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹12 - ₹25",
+        "is_estimate": true,
+        "note": "NMC Aapli Bus stage fares"
+      },
+      "source_class": "static",
+      "source_note": "Nagpur Mahanagar Parivahan Ltd (NMPL) published daytime stage schedule",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-20T00:00:00+05:30"
+    },
+    {
+      "id": "aapli-bus-night-n1",
+      "mode": "transit",
+      "transit_type": "city_bus",
+      "name": "Aapli Bus Night Feeder N1 (Hospital & Station Corridor)",
+      "route_corridor": "Nagpur Railway Station ↔ Sitabuldi ↔ Medical Square (AIIMS/GMC)",
+      "operating_window": {
+        "start": "22:30",
+        "end": "01:45"
+      },
+      "first_departure": "22:30",
+      "last_departure": "01:30",
+      "frequency_min": 45,
+      "discrete_departures": ["22:30", "23:15", "00:00", "00:45", "01:30"],
+      "stops": [
+        "Nagpur Railway Station (West)",
+        "Cotton Market Chowk",
+        "Sitabuldi Interchange (Night Stand)",
+        "Medical Square (AIIMS Nagpur / GMC Hospital Gate)",
+        "Rambagh",
+        "Untkhana"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹25 (night flat tariff)",
+        "is_estimate": true,
+        "note": "Special municipal night-feeder service flat fare"
+      },
+      "source_class": "simulated",
+      "source_note": "Synthetic night feeder service based on NMC late-shift pilot proposal",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-25T00:00:00+05:30"
+    },
+    {
+      "id": "railway-station-shuttle",
+      "mode": "transit",
+      "transit_type": "train",
+      "name": "Indian Railways Late-Night Station Connectors",
+      "route_corridor": "Nagpur Junction (NGP) ↔ Ajni (AJNI) Rail Link",
+      "operating_window": {
+        "start": "00:00",
+        "end": "23:59"
+      },
+      "first_departure": "01:15",
+      "last_departure": "23:45",
+      "frequency_min": null,
+      "discrete_departures": ["01:15", "03:45", "05:10", "22:15", "23:30"],
+      "stops": [
+        "Nagpur Junction Main Terminal",
+        "Ajni Passenger Halt"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹10 - ₹30",
+        "is_estimate": true,
+        "note": "Indian Railways unreserved passenger ticket estimate"
+      },
+      "source_class": "static",
+      "source_note": "Indian Railways Central Railway division schedule sample",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-20T00:00:00+05:30"
+    },
+    {
+      "id": "shared-auto-sitabuldi-medical",
+      "mode": "auto",
+      "transit_type": "shared_auto",
+      "name": "Shared Auto Stand: Sitabuldi ↔ Medical Square (AIIMS)",
+      "route_corridor": "Sitabuldi Auto Stand ↔ Baidyanath Chowk ↔ Medical Square",
+      "operating_window": {
+        "start": "06:00",
+        "end": "00:30"
+      },
+      "first_departure": "06:00",
+      "last_departure": "00:15",
+      "frequency_min": 10,
+      "discrete_departures": null,
+      "stops": [
+        "Sitabuldi Main Stand",
+        "Rahate Colony Chowk",
+        "Medical Square Stand"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹20 (shared seat)",
+        "is_estimate": true,
+        "note": "Informal shared auto fixed seat rate"
+      },
+      "source_class": "simulated",
+      "source_note": "Nagpur Auto Rickshaw Union stand observation heuristic",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-25T00:00:00+05:30"
+    },
+    {
+      "id": "shared-auto-sitabuldi-dharampeth",
+      "mode": "auto",
+      "transit_type": "shared_auto",
+      "name": "Shared Auto Stand: Sitabuldi ↔ Dharampeth",
+      "route_corridor": "Sitabuldi Interchange ↔ Variety Square ↔ Dharampeth",
+      "operating_window": {
+        "start": "06:00",
+        "end": "23:45"
+      },
+      "first_departure": "06:00",
+      "last_departure": "23:30",
+      "frequency_min": 10,
+      "discrete_departures": null,
+      "stops": [
+        "Sitabuldi Auto Stand",
+        "Law College Chowk",
+        "Dharampeth Main Road"
+      ],
+      "fare_estimate": {
+        "amount_text": "₹15 (shared seat)",
+        "is_estimate": true,
+        "note": "Informal shared auto fixed seat rate"
+      },
+      "source_class": "simulated",
+      "source_note": "Nagpur Auto Rickshaw Union stand observation heuristic",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-25T00:00:00+05:30"
+    },
+    {
+      "id": "private-auto-on-demand",
+      "mode": "auto",
+      "transit_type": "private_auto",
+      "name": "Street-Hail / Stand Auto-Rickshaw (Metered / Negotiated)",
+      "route_corridor": "City-wide flexible routing from hospital/major stands",
+      "operating_window": {
+        "start": "00:00",
+        "end": "23:59"
+      },
+      "first_departure": "00:00",
+      "last_departure": "23:59",
+      "frequency_min": null,
+      "discrete_departures": null,
+      "fare_estimate": {
+        "amount_text": "₹90 - ₹150 (night tariff)",
+        "is_estimate": true,
+        "note": "Nagpur RTO regulated meter rate + 25% night surcharge (00:00-05:00)"
+      },
+      "availability_policy": {
+        "hospital_stands_until_0100": "PROBABLE",
+        "hospital_stands_after_0100": "PROBABLE",
+        "general_street_after_midnight": "UNKNOWN"
+      },
+      "source_class": "simulated",
+      "source_note": "Hospital gate stand physical presence pattern proxy (no live GPS feed)",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-25T00:00:00+05:30"
+    },
+    {
+      "id": "private-ride-hail-cab",
+      "mode": "cab",
+      "transit_type": "ride_hail",
+      "name": "Private App-Based Cab / Ride-Hail",
+      "route_corridor": "Aggregator on-demand dispatch (Ola/Uber proxy)",
+      "operating_window": {
+        "start": "00:00",
+        "end": "23:59"
+      },
+      "first_departure": "00:00",
+      "last_departure": "23:59",
+      "frequency_min": null,
+      "discrete_departures": null,
+      "fare_estimate": {
+        "amount_text": "₹160 - ₹280",
+        "is_estimate": true,
+        "note": "Aggregator dynamic night pricing estimate (unverified)"
+      },
+      "availability_policy": {
+        "all_hours": "UNKNOWN"
+      },
+      "source_class": "simulated",
+      "source_note": "Zero live telemetry available from commercial ride-hail APIs. Strict UNKNOWN label policy enforced.",
+      "verify_against_official": true,
+      "last_verified_iso": "2026-10-25T00:00:00+05:30"
+    },
+    {
+      "id": "pedestrian-walk",
+      "mode": "walk",
+      "transit_type": "walk",
+      "name": "Walking / Footpath Corridor",
+      "route_corridor": "Footpath, sidewalk, and lighted road shoulder network",
+      "operating_window": {
+        "start": "00:00",
+        "end": "23:59"
+      },
+      "first_departure": "00:00",
+      "last_departure": "23:59",
+      "frequency_min": 0,
+      "discrete_departures": null,
+      "fare_estimate": {
+        "amount_text": "₹0",
+        "is_estimate": false,
+        "note": "Zero monetary cost"
+      },
+      "source_class": "static",
+      "source_note": "OpenStreetMap pedestrian geometry network",
+      "verify_against_official": false,
+      "last_verified_iso": "2026-10-20T00:00:00+05:30"
+    }
+  ]
+}

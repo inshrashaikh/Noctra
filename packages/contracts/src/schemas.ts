@@ -47,8 +47,33 @@ export const ServiceKindSchema = z.enum([
   'fuel',
   'atm',
   'shelter',
+  'restaurant',
+  'dhaba',
+  'chai_stall',
+  'canteen_24h',
+  'water',
 ]);
 export type ServiceKind = z.infer<typeof ServiceKindSchema>;
+
+export const NeedTypeSchema = z.enum([
+  'medicine',
+  'food',
+  'fuel',
+  'emergency',
+  'cash',
+  'rest_shelter',
+  'water',
+]);
+export type NeedType = z.infer<typeof NeedTypeSchema>;
+
+export const OpeningStatusSchema = z.enum([
+  'OPEN_AT_ARRIVAL',
+  'CLOSING_SOON',
+  'CLOSED_AT_ARRIVAL',
+  'OPENS_LATER',
+  'UNKNOWN',
+]);
+export type OpeningStatus = z.infer<typeof OpeningStatusSchema>;
 
 export const FactTypeSchema = z.enum([
   'ride_availability',
@@ -142,6 +167,10 @@ export const CandidateSchema = z.object({
   decision_by_iso: z.string().nullable(),
   rejected: z.boolean(),
   reject_reasons: z.array(z.string()),
+  operating_note: z.string().optional(),
+  last_service_time: z.string().optional(),
+  latest_feasible_departure_iso: z.string().nullable().optional(),
+  fare_estimate_text: z.string().optional(),
 });
 export type Candidate = z.infer<typeof CandidateSchema>;
 
@@ -188,6 +217,13 @@ export const ServicesRequestSchema = z.object({
   lon: z.number(),
   kinds: z.array(ServiceKindSchema).optional(),
   radius_m: z.number().positive().optional(),
+  need: NeedTypeSchema.optional(),
+  arrival_time_iso: z.string().optional(),
+  origin_lat: z.number().optional(),
+  origin_lon: z.number().optional(),
+  dest_lat: z.number().optional(),
+  dest_lon: z.number().optional(),
+  deadline_iso: z.string().optional(),
 });
 export type ServicesRequest = z.infer<typeof ServicesRequestSchema>;
 
@@ -204,8 +240,30 @@ export const ServiceSchema = z.object({
   source: z.string(),
   source_class: SourceClassSchema,
   osm_timestamp: z.string().nullable(),
+  opening_status: OpeningStatusSchema.optional(),
+  open_until: z.string().nullable().optional(),
+  opens_at: z.string().nullable().optional(),
+  opening_note: z.string().optional(),
+  verified_hours: z.boolean().optional(),
+  listing_evidence: EvidenceSchema.optional(),
+  opening_evidence: EvidenceSchema.optional(),
+  detour_min: z.number().optional(),
+  slack_impact_min: z.number().optional(),
+  deadline_feasible: z.boolean().optional(),
+  why_ranked: z.string().optional(),
+  uncertainties: z.array(z.string()).optional(),
 });
 export type Service = z.infer<typeof ServiceSchema>;
+
+export const ServicesResponseSchema = z.object({
+  generated_at: z.string(),
+  arrival_time_iso: z.string(),
+  services: z.array(ServiceSchema),
+  total_found: z.number(),
+  fallback_notice: z.string().nullable().optional(),
+  closest_fallback: ServiceSchema.nullable().optional(),
+});
+export type ServicesResponse = z.infer<typeof ServicesResponseSchema>;
 
 // ── Status ────────────────────────────────────────────────────────
 

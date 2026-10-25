@@ -7,15 +7,15 @@ test.describe('Noctra Night-Shift Journey & Visual Validation', () => {
     // Check key elements
     const heading = page.getByRole('heading', { level: 1 });
     await expect(heading).toBeVisible();
-    await expect(heading).toContainText('02:15 AM');
-    await expect(page.getByRole('link', { name: /Open Dashboard/i }).first()).toBeVisible();
+    await expect(heading).toContainText('2:30 AM');
+    await expect(page.getByRole('link', { name: /Plan My Journey|Dashboard/i }).first()).toBeVisible();
 
     // Verify SIMULATED badge on landing preview
     await expect(page.getByText('SIMULATED').locator('visible=true').first()).toBeVisible();
 
     // Verify sections
-    await expect(page.getByText('01 / The Problem Statement')).toBeVisible();
-    await expect(page.getByText('04 / Complete Honesty')).toBeVisible();
+    await expect(page.getByText('A city built for the daytime.')).toBeVisible();
+    await expect(page.getByText('What is real, and what is not.')).toBeVisible();
 
     // Take section screenshots on desktop
     const projectName = testInfo.project.name;

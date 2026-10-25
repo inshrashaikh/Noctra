@@ -35,7 +35,7 @@ const NARRATIVE_STEPS: NarrativeStep[] = [
     phase: 'Shift Finish',
     title: 'GMCH Hospital ICU — Shift Closes',
     summary:
-      'Maya completes a 10-hour intensive care shift. The night ward doors close. Her target is home at Mankapur by 03:00 AM.',
+      'Priya completes a 10-hour intensive care shift. The night ward doors close. Her target is home at Dharampeth by 03:00 AM.',
     detail:
       'Daytime transit apps assume frequent buses and instant cabs. But at 2:15 AM, city streets are quiet, the regular N7 bus ended at 01:45 AM, and ride-hail apps show endless searching spinners.',
     evidenceBadge: {
@@ -75,7 +75,7 @@ const NARRATIVE_STEPS: NarrativeStep[] = [
     summary:
       'Noctra computes Plan A (Metro + Lit Walk) with a fallback Plan B (Shared Auto Corridor via Sitabuldi).',
     detail:
-      'Maya is instructed: "Decide by 02:28 AM". If Metro Gate 2 is locked upon arrival, do not wait or panic — immediately pivot to Plan B.',
+      'Priya is instructed: "Decide by 02:28 AM". If Metro Gate 2 is locked upon arrival, do not wait or panic — immediately pivot to Plan B.',
     evidenceBadge: {
       label: 'KNOWN',
       source: 'Metro Ops Telemetry',
@@ -94,7 +94,7 @@ const NARRATIVE_STEPS: NarrativeStep[] = [
     summary:
       'En route along the corridor, Noctra continuously maps verified 24×7 safe havens and tracks check-in deadlines.',
     detail:
-      'Within 400m are Sitabuldi Police Assistance Booth and Apollo 24h Pharmacy. Maya shares a simulated tracking link with her family. If she fails to check in by 03:00 AM, an alert triggers.',
+      'Within 400m are Sitabuldi Police Assistance Booth and Apollo 24h Pharmacy. Priya shares a simulated tracking link with her family. If she fails to check in by 03:00 AM, an alert triggers.',
     evidenceBadge: {
       label: 'KNOWN',
       source: 'Verified Refuge Registry',
@@ -109,9 +109,9 @@ const NARRATIVE_STEPS: NarrativeStep[] = [
   {
     time: '02:44 AM',
     phase: 'Safe Arrival',
-    title: 'Home at Mankapur: Mission Complete',
+    title: 'Home at Dharampeth: Mission Complete',
     summary:
-      'Maya arrives safely home at 02:44 AM — 16 minutes before her hard deadline.',
+      'Priya arrives safely home at 02:44 AM — 16 minutes before her hard deadline.',
     detail:
       'With a single tap on "I\'m Safely Home", her Trusted Circle is reassured. No anxiety, no guessing, no stranded darkness.',
     evidenceBadge: {
@@ -148,7 +148,7 @@ export function NurseStoryNarrative() {
             <span className="font-mono text-noctra-accent">02:15 AM</span>
           </h2>
           <p className="mx-auto max-w-2xl text-base text-noctra-muted">
-            Follow Maya, an ICU nurse at Government Medical College &amp; Hospital
+            Follow Priya, an ICU nurse at Government Medical College &amp; Hospital
             (GMCH) Nagpur, as Noctra guides her decision journey home.
           </p>
         </div>

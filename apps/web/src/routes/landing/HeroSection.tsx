@@ -18,7 +18,7 @@ export function HeroSection() {
 
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <a
-                href="/dashboard"
+                href="/planner"
                 className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#12233A] px-6 text-sm font-semibold text-[#FFFFFF] hover:bg-[#1B3252] transition-colors"
               >
                 Plan My Journey

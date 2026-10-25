@@ -23,7 +23,7 @@ export const DEFAULT_JOURNEY_VALUES: JourneyFormData = {
   destinationLon: 79.0588,
   shiftEndTime: '02:15',
   deadlineTime: '03:00',
-  modes: ['auto', 'two_wheeler', 'walk'],
+  modes: ['transit', 'auto', 'two_wheeler', 'cab', 'walk'],
 };
 
 export function useJourneyForm(onSubmit: (data: JourneyFormData) => void) {

@@ -48,6 +48,23 @@ export class ApiPlanService implements PlanService {
     if (req.radius_m) {
       params.set('radius_m', req.radius_m.toString());
     }
+    if (req.need) {
+      params.set('need', req.need);
+    }
+    if (req.arrival_time_iso) {
+      params.set('arrival_time_iso', req.arrival_time_iso);
+    }
+    if (req.deadline_iso) {
+      params.set('deadline_iso', req.deadline_iso);
+    }
+    if (req.origin_lat !== undefined && req.origin_lon !== undefined) {
+      params.set('origin_lat', req.origin_lat.toString());
+      params.set('origin_lon', req.origin_lon.toString());
+    }
+    if (req.dest_lat !== undefined && req.dest_lon !== undefined) {
+      params.set('dest_lat', req.dest_lat.toString());
+      params.set('dest_lon', req.dest_lon.toString());
+    }
     const res = await fetch(`${this.baseUrl}/api/services?${params}`);
     if (!res.ok) throw new Error(`Services request failed: ${res.statusText}`);
     return res.json();

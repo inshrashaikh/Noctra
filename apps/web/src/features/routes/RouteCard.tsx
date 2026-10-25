@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Candidate } from '@noctra/contracts';
-import { Car, Bike, Footprints, Bus, Shield, AlertTriangle } from 'lucide-react';
+import { Car, Bike, Footprints, Bus, Shield, AlertTriangle, Clock } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { SimulatedBadge } from '@/components/common/SimulatedBadge';
 import { ScenarioEtaBar } from './ScenarioEtaBar';
@@ -67,9 +67,15 @@ export function RouteCard({
                 {candidate.kind}
               </span>
             </div>
-            <p className="text-[11px] font-mono text-noctra-muted">
-              {(candidate.distance_m / 1000).toFixed(1)} km journey
-            </p>
+            <div className="flex items-center gap-1.5 text-[11px] font-mono text-noctra-muted">
+              <span>{(candidate.distance_m / 1000).toFixed(1)} km journey</span>
+              {candidate.fare_estimate_text && (
+                <>
+                  <span>•</span>
+                  <span className="text-noctra-text font-medium">{candidate.fare_estimate_text}</span>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -78,6 +84,31 @@ export function RouteCard({
           {candidate.evidence.some((e) => e.simulated) && <SimulatedBadge size="sm" />}
         </div>
       </div>
+
+      {/* Operating Availability & Last Service / Latest Departure */}
+      {candidate.operating_note && (
+        <div className="flex flex-wrap items-center justify-between gap-1.5 pt-1 text-xs border-t border-noctra-border/40">
+          <span
+            className={cn(
+              'inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono border',
+              candidate.operating_note.includes('UNKNOWN')
+                ? 'border-dashed border-noctra-unknown/50 bg-noctra-unknown/15 text-noctra-unknown font-semibold'
+                : candidate.rejected || candidate.operating_note.toLowerCase().includes('ended')
+                ? 'border-noctra-infeasible/30 bg-noctra-infeasible/10 text-noctra-infeasible font-semibold'
+                : 'border-noctra-border bg-noctra-raised text-noctra-accent font-semibold'
+            )}
+          >
+            <Clock className="h-3 w-3 shrink-0" />
+            <span>{candidate.operating_note}</span>
+          </span>
+
+          {candidate.latest_feasible_departure_iso && (
+            <span className="text-[11px] font-mono text-noctra-muted">
+              Latest dep: <strong className="text-noctra-text">{candidate.latest_feasible_departure_iso.slice(11, 16)}</strong>
+            </span>
+          )}
+        </div>
+      )}
 
       {/* ETA Bars */}
       <ScenarioEtaBar eta={candidate.eta} />

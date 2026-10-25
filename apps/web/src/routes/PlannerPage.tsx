@@ -51,24 +51,42 @@ export function PlannerPage() {
   } = useQuery<PlanResponse>({
     queryKey: ['plan', formData],
     queryFn: async () => {
+      const isNextDay = formData.deadlineTime < formData.shiftEndTime;
+      const deadlineDate = isNextDay ? '2026-10-26' : '2026-10-25';
       return planService.plan({
         origin: { lat: formData.originLat, lon: formData.originLon },
         destination: { lat: formData.destinationLat, lon: formData.destinationLon },
         shift_end_iso: `2026-10-25T${formData.shiftEndTime}:00+05:30`,
-        deadline_iso: `2026-10-25T${formData.deadlineTime}:00+05:30`,
+        deadline_iso: `${deadlineDate}T${formData.deadlineTime}:00+05:30`,
         modes: formData.modes,
       });
     },
   });
 
-  // Load services query
+  // Load en-route services query evaluated against shift departure and corridor
   const { data: services = [] } = useQuery<Service[]>({
-    queryKey: ['services', formData.originLat, formData.originLon],
+    queryKey: [
+      'services',
+      formData.originLat,
+      formData.originLon,
+      formData.shiftEndTime,
+      formData.deadlineTime,
+      formData.destinationLat,
+      formData.destinationLon,
+    ],
     queryFn: async () => {
+      const shiftDate = '2026-10-26';
+      const deadlineDate = '2026-10-26';
       return planService.getServices({
         lat: formData.originLat,
         lon: formData.originLon,
-        radius_m: 5000,
+        radius_m: 8000,
+        arrival_time_iso: `${shiftDate}T${formData.shiftEndTime}:00+05:30`,
+        deadline_iso: `${deadlineDate}T${formData.deadlineTime}:00+05:30`,
+        origin_lat: formData.originLat,
+        origin_lon: formData.originLon,
+        dest_lat: formData.destinationLat,
+        dest_lon: formData.destinationLon,
       });
     },
   });
@@ -126,14 +144,14 @@ export function PlannerPage() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 font-semibold text-xs text-noctra-text">
             <span className="text-noctra-muted">Journey Route Analysis:</span>
-            <span className="font-mono text-noctra-accent">{formData.shiftEndTime} AM</span>
+            <span className="font-mono text-noctra-accent font-bold">{formData.shiftEndTime}</span>
             <span className="text-noctra-muted">&rarr; Target:</span>
-            <span className="font-mono text-noctra-text">{formData.deadlineTime} AM</span>
+            <span className="font-mono text-noctra-text font-bold">{formData.deadlineTime}</span>
           </div>
-          {selectedCandidate?.plan_b && (
+          {selectedCandidate?.plan_b && selectedCandidate.decision_by_iso && (
             <div className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] text-noctra-accent bg-noctra-raised px-2.5 py-1 rounded border border-noctra-border">
               <Clock className="h-3 w-3" />
-              <span>Decide by 02:28 AM before Plan A expires</span>
+              <span>Decide by {selectedCandidate.decision_by_iso.slice(11, 16)} before fallback</span>
             </div>
           )}
         </div>

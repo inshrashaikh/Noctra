@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { planService } from '@/services';
+import type { PlanResponse, TransportMode, Service } from '@noctra/contracts';
 import { EvidenceChip } from '@/components/common/EvidenceChip';
 import { NightRibbon } from '@/features/routes/NightRibbon';
 import { useAlerts } from '@/features/alerts/useAlerts';
 import { useSettings } from '@/features/settings/useSettings';
 import { AlertsDrawer } from '@/features/alerts/AlertsDrawer';
+import { SHIFT_PRESETS } from '@/features/journey/JourneyForm';
 import {
   LayoutDashboard,
   Navigation,
@@ -14,15 +18,47 @@ import {
   ArrowRight,
   ShieldAlert,
   Car,
+  Bike,
+  Footprints,
+  Bus,
   Clock,
   Info,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
+const MODE_ICONS: Record<string, React.FC<{ className?: string }>> = {
+  auto: Car,
+  cab: Car,
+  two_wheeler: Bike,
+  walk: Footprints,
+  transit: Bus,
+};
+
+function formatWithAmPm(hm: string): string {
+  const [h, m] = hm.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const displayH = h % 12 === 0 ? 12 : h % 12;
+  return `${displayH}:${m.toString().padStart(2, '0')} ${period}`;
+}
+
+function addMinutesToHm(hm: string, minutes: number): string {
+  const [h, m] = hm.split(':').map(Number);
+  const total = ((h * 60 + m + Math.round(minutes)) % 1440 + 1440) % 1440;
+  const rh = Math.floor(total / 60);
+  const rm = total % 60;
+  const period = rh >= 12 ? 'PM' : 'AM';
+  const displayH = rh % 12 === 0 ? 12 : rh % 12;
+  return `${displayH.toString().padStart(2, '0')}:${rm.toString().padStart(2, '0')} ${period}`;
+}
+
 export function DashboardPage() {
   const { alerts, setIsDrawerOpen } = useAlerts();
   const { setIsSettingsOpen } = useSettings();
   const [activeTab, setActiveTab] = useState<'routes' | 'services' | 'alerts'>('routes');
+
+  // Time Window state with presets
+  const [shiftEnd, setShiftEnd] = useState('02:15');
+  const [deadline, setDeadline] = useState('03:00');
 
   const navItems = [
     { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, active: true },
@@ -31,6 +67,84 @@ export function DashboardPage() {
     { label: 'Alerts', href: '#', icon: Bell, active: false, onClick: () => setIsDrawerOpen(true) },
     { label: 'Settings', href: '#', icon: SettingsIcon, active: false, onClick: () => setIsSettingsOpen(true) },
   ];
+
+  // Dynamic journey plan query for the selected shift window
+  const { data: plan } = useQuery<PlanResponse>({
+    queryKey: ['dashboard-plan', shiftEnd, deadline],
+    queryFn: async () => {
+      const isNextDay = deadline < shiftEnd;
+      const deadlineDate = isNextDay ? '2026-10-26' : '2026-10-25';
+      return planService.plan({
+        origin: { lat: 21.1497, lon: 79.0806 },       // AIIMS Nagpur
+        destination: { lat: 21.1453, lon: 79.0588 },  // Dharampeth
+        shift_end_iso: `2026-10-25T${shiftEnd}:00+05:30`,
+        deadline_iso: `${deadlineDate}T${deadline}:00+05:30`,
+        modes: ['transit', 'auto', 'two_wheeler', 'cab', 'walk'] as TransportMode[],
+      });
+    },
+  });
+
+  // Load dynamic safe havens / services evaluated at the selected shift time
+  const { data: dashboardServices = [] } = useQuery<Service[]>({
+    queryKey: ['dashboard-services', shiftEnd],
+    queryFn: async () => {
+      return planService.getServices({
+        lat: 21.0378,
+        lon: 79.0345,
+        radius_m: 8000,
+        arrival_time_iso: `2026-10-26T${shiftEnd}:00+05:30`,
+        origin_lat: 21.0378,
+        origin_lon: 79.0345,
+        dest_lat: 21.1458,
+        dest_lon: 79.0605,
+      });
+    },
+  });
+
+  // Selected or recommended candidate
+  const recCandidate = useMemo(() => {
+    if (!plan || !plan.candidates.length) return null;
+    return (
+      plan.candidates.find((c) => c.id === plan.recommended_id && !c.rejected) ||
+      plan.candidates.find((c) => !c.rejected) ||
+      plan.candidates[0]
+    );
+  }, [plan]);
+
+  // Dynamic telemetry confidence counts computed across facts
+  const evidenceCounts = useMemo(() => {
+    const counts = { KNOWN: 0, PROBABLE: 0, OUTDATED: 0, UNKNOWN: 0 };
+    if (!plan) {
+      return { KNOWN: 6, PROBABLE: 2, OUTDATED: 1, UNKNOWN: 1 };
+    }
+    const seen = new Set<string>();
+    for (const c of plan.candidates) {
+      for (const ev of c.evidence) {
+        const key = `${ev.fact_type}-${ev.subject}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          counts[ev.label] = (counts[ev.label] || 0) + 1;
+        }
+      }
+    }
+    return counts;
+  }, [plan]);
+
+  const spareMinutes = recCandidate ? Math.round(recCandidate.slack_min.expected) : 14;
+  const decideByTime = recCandidate?.decision_by_iso
+    ? recCandidate.decision_by_iso.slice(11, 16)
+    : '2:32';
+  const arrivalTime = recCandidate
+    ? addMinutesToHm(shiftEnd, recCandidate.eta.expected_min)
+    : '02:42 AM';
+
+  const routeName = recCandidate?.mode === 'transit'
+    ? 'Nagpur Metro Orange Line'
+    : recCandidate?.mode === 'auto'
+    ? 'Wardha Road Corridor'
+    : recCandidate?.mode === 'two_wheeler'
+    ? 'Seminary Hills Corridor'
+    : 'Direct Navigation Path';
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[#F7F6F2] text-[#14181D] overflow-x-hidden">
@@ -62,7 +176,7 @@ export function DashboardPage() {
             </div>
           </div>
 
-          {/* Nav List (5 items only, 48px high, active = raised bg + 2px navy left indicator) */}
+          {/* Nav List */}
           <nav className="space-y-1" aria-label="Sidebar Navigation">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -105,20 +219,45 @@ export function DashboardPage() {
 
       {/* ── MAIN CONTENT (32px page padding, 32px gaps, 12-col grid) ───── */}
       <main className="flex-1 p-4 sm:p-8 space-y-6 sm:space-y-8 max-w-[1280px] w-full min-w-0 overflow-x-hidden">
-        {/* ROW 1 (56px): Greeting, Shift window, Connection chip */}
-        <div role="region" aria-label="Shift status" className="flex flex-col sm:flex-row sm:h-14 items-start sm:items-center justify-between gap-3 rounded-xl border border-[#E2DED3] bg-[#FFFFFF] p-4 sm:px-6">
+        {/* ROW 1 (56px): Greeting, Shift window, Presets, Connection chip */}
+        <div role="region" aria-label="Shift status" className="flex flex-col sm:flex-row sm:h-auto items-start sm:items-center justify-between gap-3 rounded-xl border border-[#E2DED3] bg-[#FFFFFF] p-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="font-semibold text-sm text-[#14181D]">
               Good evening, Priya
             </span>
             <span className="hidden sm:inline text-[#E2DED3]">|</span>
             <span className="font-mono text-xs text-[#5B6672]">
-              Shift ends <strong className="text-[#14181D]">2:15 AM</strong>, home by{' '}
-              <strong className="text-[#14181D]">3:00 AM</strong>
+              Shift ends <strong className="text-[#14181D]">{formatWithAmPm(shiftEnd)}</strong>, home by{' '}
+              <strong className="text-[#14181D]">{formatWithAmPm(deadline)}</strong>
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Quick Demo Shift Presets */}
+            <div className="flex rounded-lg border border-[#E2DED3] bg-[#F7F6F2] p-0.5">
+              {SHIFT_PRESETS.map((p) => {
+                const isCur = shiftEnd === p.shift && deadline === p.deadline;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => {
+                      setShiftEnd(p.shift);
+                      setDeadline(p.deadline);
+                    }}
+                    className={cn(
+                      'rounded px-2.5 py-1 text-[11px] font-mono font-medium transition-colors select-none',
+                      isCur
+                        ? 'bg-[#12233A] text-[#FFFFFF] font-bold shadow-xs'
+                        : 'text-[#5B6672] hover:text-[#14181D]'
+                    )}
+                  >
+                    {p.shift}
+                  </button>
+                );
+              })}
+            </div>
+
             {/* Connection chip */}
             <div className="inline-flex items-center gap-1.5 rounded-md border border-[#0F766E]/30 bg-[#E6F4F1] px-2.5 py-1 font-mono text-xs text-[#0F766E]">
               <Check className="h-3.5 w-3.5 stroke-[2.5]" />
@@ -139,23 +278,23 @@ export function DashboardPage() {
                 Shift-to-deadline window
               </h2>
               <NightRibbon
-                shiftEndTime="2:15"
-                deadlineTime="3:00"
-                decideByTime="2:32"
-                spareMinutes={14}
+                shiftEndTime={shiftEnd}
+                deadlineTime={deadline}
+                decideByTime={decideByTime}
+                spareMinutes={spareMinutes}
               />
             </div>
 
-            {/* ROW 3: Compact row of four EvidenceChips with counts under ribbon */}
+            {/* ROW 3: Compact row of four EvidenceChips with counts dynamically computed */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-[#E2DED3] bg-[#FFFFFF] p-4 sm:px-6 sm:py-3 text-xs">
               <span className="font-semibold text-[#5B6672]">
                 Telemetry confidence:
               </span>
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <EvidenceChip label="KNOWN" age="6 facts verified" />
-                <EvidenceChip label="PROBABLE" age="2 facts likely" />
-                <EvidenceChip label="OUTDATED" age="1 fact aged" />
-                <EvidenceChip label="UNKNOWN" age="1 fact unconfirmed" />
+                <EvidenceChip label="KNOWN" age={`${evidenceCounts.KNOWN} facts verified`} />
+                <EvidenceChip label="PROBABLE" age={`${evidenceCounts.PROBABLE} facts likely`} />
+                <EvidenceChip label="OUTDATED" age={`${evidenceCounts.OUTDATED} fact aged`} />
+                <EvidenceChip label="UNKNOWN" age={`${evidenceCounts.UNKNOWN} fact unconfirmed`} />
               </div>
             </div>
           </div>
@@ -170,22 +309,24 @@ export function DashboardPage() {
                   </h2>
                   <span className="inline-flex items-center gap-1 font-mono text-xs font-semibold text-[#0F766E]">
                     <Check className="h-3.5 w-3.5 stroke-[2.5]" />
-                    High Certainty
+                    {recCandidate?.status === 'ROBUST' ? 'High Certainty' : 'Evaluated Path'}
                   </span>
                 </div>
 
                 <div className="mt-4 space-y-2">
                   <h3 className="text-lg font-bold text-[#14181D]">
-                    Wardha Road Corridor
+                    {routeName}
                   </h3>
                   <div className="font-mono text-sm text-[#14181D]">
-                    <span className="text-2xl font-bold text-[#14181D]">02:42 AM</span>
+                    <span className="text-2xl font-bold text-[#14181D]">{arrivalTime}</span>
                     <span className="text-xs text-[#5B6672] ml-2 font-normal">
-                      (+27 min • 18 min spare buffer)
+                      (+{recCandidate ? Math.round(recCandidate.eta.expected_min) : 27} min • {spareMinutes} min spare buffer)
                     </span>
                   </div>
                   <p className="text-xs text-[#5B6672] leading-relaxed pt-1">
-                    Verified street illumination (88%), two 24h facilities along route, and deterministic Plan B fallback.
+                    {recCandidate?.operating_note
+                      ? `${recCandidate.operating_note}. Verified illumination proxy, 24h facilities along route.`
+                      : 'Verified street illumination (88%), two 24h facilities along route, and deterministic Plan B fallback.'}
                   </p>
                 </div>
               </div>
@@ -206,7 +347,7 @@ export function DashboardPage() {
 
         {/* ROW 4: Map (8 cols, 420px high) + Right panel (4 cols, 420px high) */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column (8 cols): Map (420px high, muted light basemap, 1 navy route line) */}
+          {/* Left Column (8 cols): Map */}
           <div className="lg:col-span-8">
             <div className="relative h-[420px] w-full rounded-xl border border-[#E2DED3] bg-[#FFFFFF] overflow-hidden">
               <svg
@@ -263,13 +404,13 @@ export function DashboardPage() {
                 {/* Origin Marker */}
                 <g transform="translate(100, 320)">
                   <circle cx="0" cy="0" r="8" fill="#FFFFFF" stroke="#12233A" strokeWidth="3" />
-                  <text x="-10" y="20" fill="#14181D" fontSize="11" fontFamily="monospace" fontWeight="bold">AIIMS (2:15 AM)</text>
+                  <text x="-10" y="20" fill="#14181D" fontSize="11" fontFamily="monospace" fontWeight="bold">AIIMS ({formatWithAmPm(shiftEnd)})</text>
                 </g>
 
                 {/* Destination Marker */}
                 <g transform="translate(580, 90)">
                   <circle cx="0" cy="0" r="8" fill="#12233A" stroke="#FFFFFF" strokeWidth="2" />
-                  <text x="-25" y="-12" fill="#14181D" fontSize="11" fontFamily="monospace" fontWeight="bold">Home (3:00 AM)</text>
+                  <text x="-25" y="-12" fill="#14181D" fontSize="11" fontFamily="monospace" fontWeight="bold">Home ({formatWithAmPm(deadline)})</text>
                 </g>
               </svg>
 
@@ -282,12 +423,12 @@ export function DashboardPage() {
 
               {/* Risk Proxy Disclaimer */}
               <div className="absolute bottom-4 left-4 rounded bg-[#FFFFFF]/90 px-3 py-1 font-mono text-[11px] text-[#5B6672] border border-[#E2DED3]">
-                Environmental risk proxy (not crime data) • 5.2 km
+                Environmental risk proxy (not crime data) • 4.8 km
               </div>
             </div>
           </div>
 
-          {/* Right Column (4 cols): Right Panel with tabs (420px high, 56px rows, max 3 items) */}
+          {/* Right Column (4 cols): Right Panel with dynamically rendered candidate routes */}
           <div className="lg:col-span-4">
             <div className="flex h-[420px] flex-col justify-between rounded-xl border border-[#E2DED3] bg-[#FFFFFF] overflow-hidden">
               <div>
@@ -310,70 +451,59 @@ export function DashboardPage() {
                   ))}
                 </div>
 
-                {/* Tab Items List (56px rows, max 3 items) */}
+                {/* Dynamic Tab Items List */}
                 <div className="divide-y divide-[#E2DED3]">
                   {activeTab === 'routes' && (
                     <>
-                      <div className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
-                        <div className="flex items-center gap-2.5">
-                          <Car className="h-4 w-4 text-[#12233A]" />
-                          <div>
-                            <span className="font-semibold text-[#14181D] block">Primary Auto Corridor</span>
-                            <span className="font-mono text-[11px] text-[#5B6672]">ETA 27m</span>
+                      {plan?.candidates.slice(0, 3).map((c) => {
+                        const Icon = MODE_ICONS[c.mode] || Car;
+                        return (
+                          <div key={c.id} className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <Icon className={cn('h-4 w-4 shrink-0', c.rejected ? 'text-[#8A5A00]' : 'text-[#12233A]')} />
+                              <div className="min-w-0">
+                                <span className="font-semibold text-[#14181D] block capitalize truncate">
+                                  {c.mode.replace('_', ' ')} • {c.kind}
+                                </span>
+                                <span className="font-mono text-[10px] text-[#5B6672] truncate block">
+                                  {c.operating_note || `ETA ${Math.round(c.eta.expected_min)}m`}
+                                </span>
+                              </div>
+                            </div>
+                            <span className={cn(
+                              'font-mono font-semibold text-[11px] shrink-0 ml-2',
+                              c.rejected ? 'text-[#C93B2B]' : 'text-[#0F766E]'
+                            )}>
+                              {c.rejected ? 'INFEASIBLE' : `+${Math.round(c.slack_min.expected)}m spare`}
+                            </span>
                           </div>
-                        </div>
-                        <span className="font-mono font-semibold text-[#0F766E] text-[11px]">+14m spare</span>
-                      </div>
-
-                      <div className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
-                        <div className="flex items-center gap-2.5">
-                          <Car className="h-4 w-4 text-[#5B6672]" />
-                          <div>
-                            <span className="font-semibold text-[#14181D] block">Metro Feeder + Walk</span>
-                            <span className="font-mono text-[11px] text-[#5B6672]">ETA 34m</span>
-                          </div>
-                        </div>
-                        <span className="font-mono font-semibold text-[#0F766E] text-[11px]">+7m spare</span>
-                      </div>
-
-                      <div className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
-                        <div className="flex items-center gap-2.5">
-                          <Clock className="h-4 w-4 text-[#8A5A00]" />
-                          <div>
-                            <span className="font-semibold text-[#14181D] block">Secondary Ring Road</span>
-                            <span className="font-mono text-[11px] text-[#5B6672]">ETA 42m</span>
-                          </div>
-                        </div>
-                        <span className="font-mono font-semibold text-[#8A5A00] text-[11px]">Plan B (Standby)</span>
-                      </div>
+                        );
+                      })}
                     </>
                   )}
 
                   {activeTab === 'services' && (
                     <>
-                      <div className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
-                        <div>
-                          <span className="font-semibold text-[#14181D] block">GMC Hospital Emergency</span>
-                          <span className="font-mono text-[11px] text-[#5B6672]">0.3 km away</span>
+                      {dashboardServices.slice(0, 3).map((svc) => (
+                        <div key={svc.id} className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
+                          <div className="min-w-0 pr-2">
+                            <span className="font-semibold text-[#14181D] block truncate">{svc.name}</span>
+                            <span className="font-mono text-[11px] text-[#5B6672]">
+                              {(svc.distance_m / 1000).toFixed(1)} km away
+                              {svc.detour_min !== undefined && ` (+${svc.detour_min}m detour)`}
+                            </span>
+                          </div>
+                          <span className={`font-mono text-[10px] px-2 py-0.5 rounded border shrink-0 ${
+                            svc.opening_status === 'OPEN_AT_ARRIVAL'
+                              ? 'text-[#0F766E] bg-[#E6F4F1] border-[#0F766E]/20'
+                              : svc.opening_status === 'CLOSING_SOON'
+                              ? 'text-[#8A5A00] bg-[#FBF1DC] border-[#8A5A00]/20'
+                              : 'text-[#5B6672] bg-[#F1F3F5] border-[#D0D5DD]'
+                          }`}>
+                            {svc.opening_status === 'OPEN_AT_ARRIVAL' ? 'Open' : svc.opening_status === 'CLOSING_SOON' ? 'Closing' : 'Closed'}
+                          </span>
                         </div>
-                        <span className="font-mono text-[10px] text-[#0F766E] bg-[#E6F4F1] px-2 py-0.5 rounded border border-[#0F766E]/20">24×7</span>
-                      </div>
-
-                      <div className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
-                        <div>
-                          <span className="font-semibold text-[#14181D] block">Sitabuldi Police Post</span>
-                          <span className="font-mono text-[11px] text-[#5B6672]">0.5 km away</span>
-                        </div>
-                        <span className="font-mono text-[10px] text-[#0F766E] bg-[#E6F4F1] px-2 py-0.5 rounded border border-[#0F766E]/20">24×7</span>
-                      </div>
-
-                      <div className="h-14 px-4 flex items-center justify-between text-xs hover:bg-[#F7F6F2]">
-                        <div>
-                          <span className="font-semibold text-[#14181D] block">Dharampeth 24h Pharmacy</span>
-                          <span className="font-mono text-[11px] text-[#5B6672]">1.2 km away</span>
-                        </div>
-                        <span className="font-mono text-[10px] text-[#8A5A00] bg-[#FBF1DC] px-2 py-0.5 rounded border border-[#8A5A00]/20">Open</span>
-                      </div>
+                      ))}
                     </>
                   )}
 
@@ -398,8 +528,8 @@ export function DashboardPage() {
                       <div className="h-14 px-4 flex items-center gap-3 text-xs hover:bg-[#F7F6F2]">
                         <Clock className="h-4 w-4 text-[#5B6672] shrink-0" />
                         <div>
-                          <span className="font-semibold text-[#14181D] block">Feeder N7 Scheduled</span>
-                          <span className="font-mono text-[11px] text-[#5B6672]">Departure 02:45 AM</span>
+                          <span className="font-semibold text-[#14181D] block">Metro Last Service Alert</span>
+                          <span className="font-mono text-[11px] text-[#5B6672]">Orange Line last departure 22:15</span>
                         </div>
                       </div>
                     </>
@@ -411,7 +541,7 @@ export function DashboardPage() {
               <div className="p-4 border-t border-[#E2DED3] text-center bg-[#FFFFFF]">
                 {activeTab === 'routes' && (
                   <a href="/planner" className="text-xs font-semibold text-[#12233A] hover:underline">
-                    View all routes →
+                    View all routes in planner →
                   </a>
                 )}
                 {activeTab === 'services' && (

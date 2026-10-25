@@ -2,10 +2,36 @@
   "city": "Nagpur, Maharashtra, India",
   "bbox": [78.95, 21.05, 79.20, 21.25],
   "osm_extract_iso": "2026-10-20T00:00:00+05:30",
-  "version": "1.0.0-simulated",
+  "version": "1.2.0-simulated",
+  "transport_seed": {
+    "file": "data/nagpur_transport_seed.json",
+    "version": "1.0.0-seed",
+    "verification_policy": "verify_against_official=true on all public transit timetables",
+    "modes_included": ["transit", "auto", "cab", "walk", "two_wheeler"],
+    "sub_modes": ["metro", "city_bus", "train", "shared_auto", "private_auto", "ride_hail", "walk"]
+  },
+  "services_seed": {
+    "file": "data/nagpur_services_seed.json",
+    "version": "1.0.0-seed",
+    "verification_policy": "verify_against_official=true on all facility opening hours",
+    "kinds_included": [
+      "hospital",
+      "pharmacy",
+      "police",
+      "fuel",
+      "dhaba",
+      "restaurant",
+      "chai_stall",
+      "canteen_24h",
+      "water",
+      "atm"
+    ]
+  },
   "sources": {
     "roads": "OpenStreetMap contributors (ODbL)",
     "refuges": "OpenStreetMap + Municipal Directory (Simulated)",
-    "environmental_risk": "Synthetic proxy model v0.9"
+    "environmental_risk": "Synthetic proxy model v0.9",
+    "transport_timetables": "Synthesised from Maha Metro Nagpur & NMC Aapli Bus published stage guides (Simulated/Static)",
+    "essential_services": "OpenStreetMap extracts, Municipal Health Directory, National AMRIT Registry, Nagpur Police Emergency Helpdesks, and field surveys (Simulated/Static)"
   }
 }
