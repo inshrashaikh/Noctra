@@ -1,0 +1,30 @@
+{
+  "name": "noctra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Night-time decision engine for night-shift workers",
+  "scripts": {
+    "dev": "pnpm --filter @noctra/web dev",
+    "build": "pnpm --filter @noctra/contracts build && pnpm --filter @noctra/web build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm --filter @noctra/web test:e2e",
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,css,md}\"",
+    "prepare": "husky && node scripts/patch-tailwind.js"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "devDependencies": {
+    "@tailwindcss/vite": "4.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "3.4.2",
+    "tailwindcss": "4.0.0",
+    "typescript-eslint": "^8.72.0"
+  }
+}
