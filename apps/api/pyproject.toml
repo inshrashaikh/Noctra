@@ -1,0 +1,15 @@
+[project]
+name = "noctra-api"
+version = "0.1.0"
+description = "Decision engine backend for Noctra (night-time worker travel assistant)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+    "pydantic>=2.9.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

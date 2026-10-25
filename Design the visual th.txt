@@ -1,0 +1,54 @@
+Design the visual theme and the landing page for "Noctra", a night-time journey decision tool for night-shift workers (security guards, nurses, delivery riders, sanitation and factory workers, call-centre staff) in Indian cities. Tagline: "Navigate the Night. Get Home Safer."
+
+The product: a worker finishes at 2:15 AM and must be home by 3:00 AM. Noctra shows feasible ways home, how much time is spare in the WORST case, a "decide by HH:MM" moment with a Plan B, and labels every fact as KNOWN, PROBABLE, OUTDATED or UNKNOWN instead of confidently guessing. It keeps working when the internet or live data disappears.
+
+## TECH CONSTRAINTS
+- React + TypeScript + Tailwind CSS + shadcn/ui + lucide-react only. Plain React components.
+- No Next.js features: no next/link, next/image, next/font, server components, app router, "use client". I am porting to Vite. Use <a> and <img>.
+- All theme values as CSS variables in one globals.css, mapped in the Tailwind config. Structure the variables under :root (light, the default) so a .dark override block can be added later without touching components. Design ONLY the light theme now.
+- One component per section in its own file (Navbar, Hero, ProblemSection, HowNoctraThinks, OfflineTiers, RealVsSimulated, FinalCta, Footer). No file over 200 lines. No animation libraries; CSS transitions only.
+
+## ART DIRECTION: "daylight instrument panel"
+A light, calm, precise interface. Think a well-made printed timetable crossed with a clean engineering tool. Trustworthy, not playful, not a startup template. Premium comes from restraint, alignment and generous space, not decoration.
+
+Light tokens (verify WCAG AA for every text/background pair and tell me any pair that fails):
+- bg #F7F6F2 (warm off-white), surface #FFFFFF, raised #F1EFE8, border #E2DED3, strong border #C9C4B6.
+- text #14181D, muted #5B6672.
+- Primary action: deep navy #12233A with white text (hover #1B3252). This is the ONLY filled button style.
+- Amber #F2B54A is a FILL colour only (deadline bar, "decide by" marker, with #14181D text on it). For amber-coloured text use #8A5A00.
+- Route line on maps: navy #12233A, 3px, one per map. Basemap muted warm greys.
+- Status (always shape + text + tint, never colour alone). Build ONE reusable EvidenceChip: label + age ("12 min ago") + source.
+  - KNOWN: text #0F766E on tint #E6F4F1, solid check icon.
+  - PROBABLE: text #1D5FA8 on tint #E8F0FA, half-filled circle.
+  - OUTDATED: text #8A5A00 on tint #FBF1DC, clock icon, value struck through.
+  - UNKNOWN: text #5E5780 on tint #EEECF5, dashed border, "?" icon.
+- Shadows: one level only, 0 1px 2px rgba(20,24,29,.06), 0 8px 24px rgba(20,24,29,.06), used ONLY on the hero product preview and open dialogs. Everything else is separated by 1px borders.
+- Type: Atkinson Hyperlegible Next for UI; JetBrains Mono (tabular-nums) ONLY for times and numbers. Scale 12/14/16/20/28/40/56, weights 400 and 600 only. Headlines line-height 1.1 to 1.2, tracking -0.01em on 40/56; body 1.5; paragraphs max 65ch; text left-aligned.
+- Spacing scale 4/8/12/16/24/32/48/64/112. Section padding 112 desktop, 64 mobile. 12-column grid, max-width 1280px, 24px side padding (16 mobile). Card radius 12px, buttons 10px.
+
+## DASHBOARD SPACING SYSTEM (define as tokens now, used by the dashboard later)
+Dashboards must breathe. Page padding 32px. Gap between modules 32px (24px on tablet). Card padding 24px (32px for hero modules). Gap between a card title and its content 16px; between list rows 12px with 56px minimum row height. Max 5 modules above the fold, max 3 list items per card plus a "View all" link, one primary button per card at most, never two competing accents in one card. Section titles 14px/600 muted, sentence case, no uppercase tracking. Show this system in a small "Spacing in practice" block on the design-tokens preview page.
+
+## DO NOT (these read as AI-generated)
+Gradient text, gradient backgrounds, glow, glassmorphism, blur, neon, floating blobs, grid-pattern or dot-pattern backgrounds, icon-in-a-colored-circle on cards, identical 3-column icon feature grids, rainbow badges, coloured borders on every card, emoji as icons, centered-everything layouts, buzzwords ("revolutionary", "seamless", "empower", "AI-powered", "next-gen"), stock photos, lorem ipsum, invented statistics, user counts, testimonials or logos.
+
+## NAVBAR (exact)
+Sticky, 64px high, solid #FFFFFF, 1px bottom border, no blur. Inner container max 1280px, centered, 24px padding. One flex row, three zones, everything vertically centered: logo left (wordmark "Noctra" with a small crescent-and-lamp mark drawn in SVG, no icon circle); links centre (How it works, Offline, Real vs Simulated; each 40px high, 12px horizontal padding, active = 2px navy bottom indicator); right: one primary button "Plan My Journey". No absolute positioning on items, no negative margins. Below 768px: logo + hamburger, links in a full-width sheet. Must not wrap or overflow at 1024, 768, 390.
+
+## LANDING PAGE (build in this order)
+1. HERO. Two columns (5/7 split), left-aligned. Headline (56px): "At 2:30 AM, the bus may or may not be running. Noctra tells you which." Supporting sentence (20px, muted): "Plan your way home with the worst case in view, a clear moment to switch plans, and an honest label on every fact." Primary button "Plan My Journey", secondary text link "See how it decides". Under the buttons, one muted line: "Built for CASCADE '26, IIIT Nagpur. Prototype with simulated data."
+   Right column: a product preview card (white, 1px border, the single allowed shadow) containing, top to bottom: a header row (shift "Ends 2:15 AM", "Home by 3:00 AM", SIMULATED badge); a hand-built SVG map 320px high (muted warm-grey streets, a river or park shape, one navy route line, origin and destination markers, two small facility markers); then the NIGHT RIBBON: a horizontal timeline 2:15 to 3:00 with three nested arrival bands (best, expected, worst) in navy at three opacities, an amber "decide by 2:32" marker, and the status line "ON TIME, 14 min spare (worst case)"; then two EvidenceChips ("Road open: PROBABLE, 12 min ago" and "Cab availability: UNKNOWN"). Everything inside has 24px padding and 16px gaps; do not cram.
+2. THE PROBLEM. Left column (5 cols) a 40px heading, "A city built for the daytime." Right column (6 cols, offset 1) two short paragraphs: cities are designed around people who work in the day, but millions of workers live on a different schedule; at 2:30 AM a worker may need food, medicine, transport or a safe route home, and existing apps treat night as just a different timestamp. No numbers. Below, "Who it is for": a 2-column definition list of six workers (security guard, nurse, delivery rider, sanitation worker, factory worker, call-centre agent), each with a one-line concrete need. Plain list with hairline dividers, no icons.
+3. HOW NOCTRA THINKS. Heading "Every fact carries its age." Centrepiece, the AGE AXIS: a wide horizontal axis from "just now" to "hours ago" with an example fact ("Bus 14 running") and its chip changing along the axis: KNOWN (0 to 10 min) → OUTDATED (10 to 60 min) → UNKNOWN (beyond), with tick labels in mono. Show PROBABLE as a separate row for facts that come from incomplete evidence (e.g. a community report awaiting a second confirmation). Below the axis, four columns, one per label: the real EvidenceChip, a one-sentence definition, one example. Closing line: "Noctra never turns missing data into a confident answer." Flag the example times as illustrative.
+4. WORKS WHEN THE NETWORK DOESN'T. Heading "Three tiers of degraded." Horizontal three-step diagram joined by a thin line with nodes, no cards-with-icons: Tier 0 "Live data" ; Tier 1 "Live feeds down: cached data, labels age visibly" ; Tier 2 "Server unreachable: last plan stays on the phone, emergency number 112 always shown". Under each, a tiny UI fragment (a banner in that tier's tone, drawn with real components).
+5. REAL VS SIMULATED. Heading "What is real, and what is not." An honest table, 4 columns (Data, Source, Status, Note) with EvidenceChips or plain status text: roads and facilities (OpenStreetMap, cached); weather (cached when offline); risk ("Environmental risk proxy (not crime data)"); incidents and closures (simulated in demo); ride availability (unknown unless injected); transit schedules (only with a verified source, else unknown). Rows 56px high, hairline dividers, horizontally scrollable inside its own container on mobile.
+6. FINAL CTA + FOOTER. A full-width raised (#F1EFE8) band: "Know your way home before you leave." + primary button. Footer on white: logo, three link groups, "© OpenStreetMap contributors", "CASCADE '26, IIIT Nagpur", note "Prototype. Data shown is simulated."
+
+## COPY STYLE
+Short, specific, engineer-careful sentences. Example: "At 2:30 AM the bus may or may not be running. Noctra tells you which, and how sure it is." Sentence case everywhere. No exclamation marks.
+
+## ACCESSIBILITY
+AA contrast on every pair, visible 2px navy focus ring with 2px offset, 48px touch targets on mobile, status never colour-only, prefers-reduced-motion respected, semantic landmarks and heading order.
+
+## DELIVERABLES
+Responsive at 1440, 1024, 768 and 390px; globals.css tokens (light, with a commented placeholder .dark block); Tailwind config mapping; EvidenceChip, NightRibbon and AgeAxis as standalone reusable components; a short list of shadcn components used; and a list of any colour pairs that fail AA.

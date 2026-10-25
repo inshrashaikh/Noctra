@@ -1,0 +1,11 @@
+{
+  "city": "Nagpur, Maharashtra, India",
+  "bbox": [78.95, 21.05, 79.20, 21.25],
+  "osm_extract_iso": "2026-10-20T00:00:00+05:30",
+  "version": "1.0.0-simulated",
+  "sources": {
+    "roads": "OpenStreetMap contributors (ODbL)",
+    "refuges": "OpenStreetMap + Municipal Directory (Simulated)",
+    "environmental_risk": "Synthetic proxy model v0.9"
+  }
+}
