@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Menu, X, Settings as SettingsIcon, Sun, Moon, PhoneCall, Sparkles } from 'lucide-react';
+import { Menu, X, Settings as SettingsIcon, PhoneCall, Sparkles } from 'lucide-react';
 import { useSettings } from '@/features/settings/useSettings';
-import { useTheme } from '@/features/theme/useTheme';
 import { useOnboarding } from '@/features/onboarding/useOnboarding';
 import { cn } from '@/lib/cn';
 
@@ -14,7 +13,6 @@ export interface NavbarProps {
 export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { setIsSettingsOpen } = useSettings();
-  const { theme, toggleTheme } = useTheme();
   const { openOnboarding } = useOnboarding();
 
   const marketingLinks = [
@@ -123,21 +121,6 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
           >
             <Sparkles className="h-3.5 w-3.5 text-noctra-accent" />
             <span>Get Started</span>
-          </button>
-
-          {/* Theme Toggle Button */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg border border-noctra-border bg-noctra-surface text-noctra-muted hover:text-noctra-text hover:bg-noctra-raised transition-colors"
-            aria-label="Toggle theme"
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-amber-400" />
-            ) : (
-              <Moon className="h-4 w-4 text-noctra-text" />
-            )}
           </button>
 
           {/* Settings Button (Desktop) */}

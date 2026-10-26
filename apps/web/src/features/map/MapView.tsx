@@ -11,7 +11,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapPin, Plus, Hospital, Shield, Fuel, Pill } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { NAGPUR_CENTER } from '@/lib/geo';
-import { darkMapStyle } from './mapStyle';
+import { lightMapStyle } from './mapStyle';
 import type { Candidate, Service } from '@noctra/contracts';
 
 interface MapViewProps {
@@ -32,9 +32,9 @@ const SERVICE_ICONS: Record<string, typeof Hospital> = {
 };
 
 const ROUTE_COLORS: Record<string, string> = {
-  fastest: '#F2B54A',
-  balanced: '#7CB7FF',
-  safest: '#4FD1B5',
+  fastest: '#D97706',
+  balanced: '#2563EB',
+  safest: '#059669',
 };
 
 export function MapView({
@@ -68,12 +68,12 @@ export function MapView({
   }, []);
 
   return (
-    <div className={cn('relative h-full w-full', className)}>
+    <div className={cn('relative h-full w-full bg-[#F4F5F8]', className)}>
       <Map
         {...viewState}
         onMove={handleMove}
         onClick={handleClick}
-        mapStyle={darkMapStyle as any}
+        mapStyle={lightMapStyle as any}
         attributionControl={false}
         style={{ width: '100%', height: '100%' }}
       >
@@ -99,10 +99,10 @@ export function MapView({
                 type="line"
                 paint={{
                   'line-color': isRejected
-                    ? '#4A4A4A'
-                    : ROUTE_COLORS[candidate.kind] ?? '#F2B54A',
-                  'line-width': isSelected ? 4 : 2,
-                  'line-opacity': isSelected ? 1 : isRejected ? 0.3 : 0.6,
+                    ? '#94A3B8'
+                    : ROUTE_COLORS[candidate.kind] ?? '#D97706',
+                  'line-width': isSelected ? 5 : 3,
+                  'line-opacity': isSelected ? 1 : isRejected ? 0.35 : 0.75,
                   'line-dasharray': isRejected ? [2, 4] : [1],
                 }}
                 layout={{
@@ -118,10 +118,10 @@ export function MapView({
         {origin && (
           <Marker longitude={origin.lon} latitude={origin.lat} anchor="bottom">
             <div className="flex flex-col items-center">
-              <div className="rounded-full bg-noctra-accent p-1.5 shadow-md">
-                <MapPin className="h-4 w-4 text-noctra-bg" />
+              <div className="rounded-full bg-[#12233A] text-white p-1.5 shadow-md border-2 border-white">
+                <MapPin className="h-4 w-4" />
               </div>
-              <span className="mt-1 text-xs font-semibold text-noctra-accent">
+              <span className="mt-1 text-[11px] font-bold text-[#14181D] bg-white px-2 py-0.5 rounded shadow-sm border border-[#E2DED3]">
                 Start
               </span>
             </div>
@@ -136,10 +136,10 @@ export function MapView({
             anchor="bottom"
           >
             <div className="flex flex-col items-center">
-              <div className="rounded-full bg-noctra-text p-1.5 shadow-md">
-                <MapPin className="h-4 w-4 text-noctra-bg" />
+              <div className="rounded-full bg-[#EA580C] text-white p-1.5 shadow-md border-2 border-white">
+                <MapPin className="h-4 w-4" />
               </div>
-              <span className="mt-1 text-xs font-semibold text-noctra-text">
+              <span className="mt-1 text-[11px] font-bold text-[#14181D] bg-white px-2 py-0.5 rounded shadow-sm border border-[#E2DED3]">
                 Home
               </span>
             </div>
@@ -157,10 +157,10 @@ export function MapView({
               anchor="center"
             >
               <div
-                className="rounded-full border border-noctra-border bg-noctra-surface p-1"
+                className="rounded-full border border-[#C9C4B6] bg-white p-1 shadow-sm hover:scale-110 transition-transform"
                 title={`${service.name} (${service.kind})`}
               >
-                <Icon className="h-3 w-3 text-noctra-muted" />
+                <Icon className="h-3.5 w-3.5 text-[#12233A]" />
               </div>
             </Marker>
           );
@@ -168,7 +168,7 @@ export function MapView({
       </Map>
 
       {/* Map attribution */}
-      <div className="absolute bottom-1 left-1 rounded bg-noctra-bg/80 px-2 py-0.5 text-[10px] text-noctra-muted">
+      <div className="absolute bottom-1 left-1 rounded bg-white/80 backdrop-blur-xs px-2 py-0.5 text-[10px] text-[#5B6672] border border-[#E2DED3]">
         © OpenStreetMap contributors
       </div>
     </div>
