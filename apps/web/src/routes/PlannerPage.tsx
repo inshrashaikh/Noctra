@@ -153,7 +153,7 @@ export function PlannerPage() {
   };
 
   return (
-    <div className="flex flex-1 flex-col min-h-0 w-full overflow-hidden bg-noctra-bg">
+    <div className="flex flex-1 flex-col min-h-0 h-full w-full overflow-hidden bg-noctra-bg">
       {/* Planner Sub-header / Constraints Strip */}
       <div className="flex h-11 sm:h-12 shrink-0 items-center justify-between border-b border-noctra-border bg-noctra-surface px-3 sm:px-6">
         <div className="flex items-center gap-2.5">
@@ -210,10 +210,10 @@ export function PlannerPage() {
       </div>
 
       {/* Main 3-Column Layout */}
-      <div className="grid flex-1 grid-cols-1 overflow-hidden md:grid-cols-12 min-h-0">
+      <div className="grid flex-1 grid-cols-1 md:grid-cols-12 md:grid-rows-1 min-h-0 h-full overflow-hidden">
         {/* Left Column: Journey Form & Inputs (cols 1-3) */}
         <aside className={cn(
-          'flex-col border-r border-noctra-border bg-noctra-surface/50 p-4 overflow-y-auto md:col-span-3',
+          'flex-col border-r border-noctra-border bg-noctra-surface/50 p-4 overflow-y-auto md:col-span-3 h-full min-h-0',
           activeTabMobile === 'details' ? 'flex' : 'hidden md:flex'
         )}>
           <div className="mb-4 flex items-center justify-between">
@@ -242,11 +242,11 @@ export function PlannerPage() {
 
         {/* Center Column: Map & Night Ribbon (cols 4-8) */}
         <section className={cn(
-          'relative flex flex-col overflow-hidden bg-noctra-bg md:col-span-5',
+          'relative flex flex-col overflow-hidden bg-noctra-bg md:col-span-5 h-full min-h-0',
           activeTabMobile === 'map' ? 'flex' : 'hidden md:flex'
         )}>
           {/* Night Ribbon at top of Map */}
-          <div className="p-3 border-b border-noctra-border/60 z-10 bg-noctra-bg/95">
+          <div className="p-3 border-b border-noctra-border/60 z-10 bg-noctra-bg/95 shrink-0">
             <NightRibbon
               candidate={selectedCandidate}
               shiftEndTime={formData.shiftEndTime}
@@ -255,7 +255,7 @@ export function PlannerPage() {
           </div>
 
           {/* Interactive Map */}
-          <div className="relative flex-1 min-h-[300px]">
+          <div className="relative flex-1 min-h-0 h-full w-full overflow-hidden">
             <MapView
               candidates={plan?.candidates || []}
               selectedId={selectedRouteId}
@@ -266,7 +266,7 @@ export function PlannerPage() {
             />
 
             {pickMode !== 'none' && (
-              <div className="absolute top-4 left-4 right-4 z-20 rounded-md bg-noctra-accent p-2.5 text-center text-xs font-semibold text-noctra-bg border border-noctra-border">
+              <div className="absolute top-4 left-4 right-4 z-20 rounded-md bg-noctra-accent p-2.5 text-center text-xs font-semibold text-noctra-bg border border-noctra-border shadow-lg">
                 Click anywhere on the map to set your {pickMode.toUpperCase()} location
               </div>
             )}
@@ -275,7 +275,7 @@ export function PlannerPage() {
 
         {/* Right Column: Route Options, Evidence & Intelligence (cols 9-12) */}
         <aside className={cn(
-          'flex-col border-l border-noctra-border bg-noctra-surface/40 p-4 overflow-y-auto space-y-4 md:col-span-4',
+          'flex-col border-l border-noctra-border bg-noctra-surface/40 p-4 overflow-y-auto space-y-4 md:col-span-4 h-full min-h-0',
           activeTabMobile === 'routes' ? 'flex' : 'hidden md:flex'
         )}>
           {isLoading && <LoadingState count={3} />}

@@ -32,7 +32,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
   const links = mode === 'app' ? appLinks : marketingLinks;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#131822] transition-colors">
+    <header className="sticky top-0 z-40 w-full shrink-0 border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#131822] transition-colors">
       <div className="mx-auto flex h-14 sm:h-16 max-w-[1280px] items-center justify-between px-3 sm:px-6">
         {/* Left Zone: Logo */}
         <div className="flex shrink-0 items-center">
