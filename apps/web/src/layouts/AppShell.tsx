@@ -2,6 +2,8 @@ import { Outlet, useLocation } from '@tanstack/react-router';
 import { Navbar } from '@/components/common/Navbar';
 import { BottomNav } from '@/components/common/BottomNav';
 import { AlertsDrawer } from '@/features/alerts/AlertsDrawer';
+import { EmergencyChatbotModal } from '@/features/chatbot/EmergencyChatbotModal';
+import { FloatingSOSButton } from '@/features/chatbot/FloatingSOSButton';
 import { cn } from '@/lib/cn';
 
 /**
@@ -30,6 +32,8 @@ export function AppShell() {
 
       <BottomNav currentPath={pathname} />
       <AlertsDrawer />
+      <FloatingSOSButton />
+      <EmergencyChatbotModal />
     </div>
   );
 }

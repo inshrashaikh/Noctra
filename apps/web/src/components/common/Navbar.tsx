@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Menu, X, Settings as SettingsIcon, Sun, Moon, PhoneCall, Sparkles } from 'lucide-react';
+import { Menu, X, Settings as SettingsIcon, Sun, Moon, PhoneCall, Sparkles, ShieldAlert } from 'lucide-react';
 import { useSettings } from '@/features/settings/useSettings';
 import { useTheme } from '@/features/theme/useTheme';
 import { useOnboarding } from '@/features/onboarding/useOnboarding';
+import { useEmergencyChatbot } from '@/features/chatbot/useEmergencyChatbot';
 import { cn } from '@/lib/cn';
 
 export interface NavbarProps {
@@ -114,6 +115,18 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
             <span className="font-mono tracking-wider">112</span>
           </a>
 
+          {/* Offline SOS Crisis Guide Button */}
+          <button
+            type="button"
+            onClick={() => useEmergencyChatbot.getState().openChat()}
+            className="inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3 text-xs font-bold rounded-lg border border-noctra-infeasible/50 bg-noctra-infeasible/15 hover:bg-noctra-infeasible/25 text-noctra-infeasible transition-colors cursor-pointer"
+            title="Offline SOS Crisis Guide"
+            aria-label="Open Offline SOS Emergency Assistant"
+          >
+            <ShieldAlert className="h-3.5 w-3.5" />
+            <span className="hidden xs:inline">SOS Guide</span>
+          </button>
+
           {/* Get Started Guide Tour Button */}
           <button
             type="button"
@@ -175,6 +188,18 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
       {isMobileMenuOpen && (
         <div className="border-t border-noctra-border bg-noctra-surface px-4 py-3 md:hidden space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-150">
           <nav className="flex flex-col gap-1" aria-label="Mobile Navigation">
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                useEmergencyChatbot.getState().openChat();
+              }}
+              className="flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-bold text-noctra-infeasible bg-noctra-infeasible/10 border border-noctra-infeasible/30"
+            >
+              <ShieldAlert className="h-4 w-4" />
+              <span>Offline SOS Crisis Assistant</span>
+            </button>
+
             {links.map((link) => {
               const isAnchor = link.href.startsWith('#');
               if (isAnchor) {
