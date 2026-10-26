@@ -2,111 +2,106 @@
 
 # Noctra
 
-### Night-time journey decisions, made with clarity.
+### Clearer journey decisions after dark.
 
-**A full-stack decision-support application for night-shift workers in Nagpur, India.**
+**A night-time journey decision-support app for shift workers in Nagpur, India.**
 
-Compare journey options, understand deadline feasibility, and find essential services
-with clear explanations of what is known, uncertain, or out of date.
+Plan around transport schedules and work deadlines, compare journey options, and find
+essential services—with clear labels for what is known, uncertain, or out of date.
 
-[Product](#what-noctra-does) · [Architecture](#architecture) · [Get started](#get-started) · [API](#api-reference) · [Engineering](#engineering)
+[What it does](#what-noctra-does) · [Architecture](#architecture) · [Get started](#get-started) · [API](#api-reference) · [Development](#development)
 
 </div>
 
-> **Safety note:** Noctra is a decision-support application, not an emergency-response service. For immediate danger or urgent assistance in India, call **112**.
+> **Safety:** Noctra is a decision-support tool, not an emergency-response service. If you are in immediate danger in India, call **112**.
 
-## What Noctra does
+<a id="what-noctra-does"></a>
 
-Noctra helps people finishing late shifts make a more informed journey decision. It brings together journey timing, transport availability, deadline slack, route context, essential services, and evidence freshness in one interface.
+## ✨ What Noctra does
 
-| Capability             | What it provides                                                                                |
-| ---------------------- | ----------------------------------------------------------------------------------------------- |
-| Journey planning       | Candidate transport options, arrival-time ranges, deadline slack, feasibility, and explanations |
-| Disruption response    | Replanning when journey conditions change                                                       |
-| Essential services     | Nearby services ranked by location, need, opening status, and journey impact                    |
-| Evidence transparency  | Provenance and freshness labels: **KNOWN**, **PROBABLE**, **OUTDATED**, and **UNKNOWN**         |
-| Journey context        | Route map, stage timeline, fallback options, and safe-haven information                         |
-| Connectivity awareness | Feed and service status to help explain limitations in available information                    |
-| Android access         | Capacitor packaging for an Android application                                                  |
+Noctra brings journey timing, transport availability, deadline feasibility, route context, and nearby essential services together to help people make more informed decisions after a late shift.
 
-Noctra currently uses deterministic planning and service engines. It does not depend on a generative AI model. Its results are derived from the selected implementation, its rules, and its available data.
+| Capability            | What it provides                                                                                    |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| Journey planning      | Candidate transport options, arrival-time ranges, deadline slack, feasibility, and explanations     |
+| Disruption replanning | Updated options when journey conditions change                                                      |
+| Essential services    | Nearby services ranked by location, need, opening status, and journey impact                        |
+| Evidence transparency | **KNOWN**, **PROBABLE**, **OUTDATED**, and **UNKNOWN** labels with provenance and freshness context |
+| Journey context       | Route map, stage timeline, fallback options, and safe-haven information                             |
+| Android app           | Capacitor packaging for Android                                                                     |
 
-## Architecture
+The current planning and service engines are deterministic. Results depend on the selected implementation and available data; Noctra does not use a generative AI model.
+
+<a id="architecture"></a>
+
+## 🧭 Architecture
 
 ```mermaid
-flowchart TB
-  subgraph Client["Client: browser or Android"]
-    direction TB
-    Capacitor["Capacitor Android wrapper"] -. packages .-> WebApp
-
-    subgraph WebApp["React + TypeScript application"]
-      direction TB
-      Features["Routes and feature modules<br/>Journey · planner · map · services<br/>evidence · alerts · settings"]
-      State["Application state and query cache"]
-      Boundary["PlanService interface"]
-      Select{"VITE_DATA_MODE"}
-      Local["Local TypeScript service"]
-      LocalEngines["Frontend planning and service engines<br/>Local fixtures"]
-      ApiClient["HTTP API client"]
-
-      Features --> State --> Boundary --> Select
-      Select -->|"mock (default)"| Local --> LocalEngines
-      Select -->|"api"| ApiClient
-    end
+flowchart LR
+  subgraph Client["Browser or Android"]
+    direction LR
+    UI["React + TypeScript<br/>Pages and features"]
+    Service["PlanService<br/>Shared client interface"]
+    UI --> Service
   end
 
-  subgraph Api["Python API"]
-    direction TB
-    Routes["FastAPI endpoints"]
-    Models["Pydantic request and response models"]
-    Engines["Domain engines<br/>Transport · deadlines · services<br/>opening hours · evidence"]
-    Data["Nagpur JSON assets<br/>transport · services · manifest"]
-
-    Routes --> Models --> Engines --> Data
+  subgraph Sources["Data source selection"]
+    direction LR
+    Local["Local mode<br/>TypeScript engines + fixtures"]
+    Http["API mode<br/>HTTP client"]
   end
 
-  ApiClient -->|"HTTP / JSON"| Routes
+  subgraph Backend["Python API"]
+    direction LR
+    FastAPI["FastAPI endpoints<br/>Pydantic models"]
+    Engines["Planning, transport,<br/>services and evidence"]
+    Data["Nagpur JSON assets<br/>Transport, services, manifest"]
+    FastAPI --> Engines --> Data
+  end
 
-  Contracts["packages/contracts<br/>Zod schemas · TypeScript types<br/>TypeScript evidence-decay rules"]
-  Contracts -. "web types and validation" .-> WebApp
-  Contracts -. "API shapes mirrored in Python" .-> Models
+  Contracts["Shared web contracts<br/>Zod schemas + TypeScript types"]
+
+  Service -->|"VITE_DATA_MODE=mock"| Local
+  Service -->|"VITE_DATA_MODE=api"| Http
+  Http -->|"HTTP / JSON"| FastAPI
+  Contracts -. "types and validation" .-> UI
 ```
 
-### System boundaries
+### How the pieces fit
 
-- **Web application — `apps/web`:** React pages and feature modules collect journey inputs and present plans, routes, maps, service results, alerts, and evidence. The app uses TanStack Router for navigation and TanStack Query for server-style request state.
-- **Service boundary — `PlanService`:** feature UI calls a shared interface for planning, replanning, service lookup, status, and alerts. This keeps screens independent of the selected data source.
-- **Local mode — `VITE_DATA_MODE=mock`:** the local `PlanService` calls the frontend's deterministic planning and service engines directly. MSW is also configured to intercept supported `/api` requests during development; it is a separate request path.
-- **API mode — `VITE_DATA_MODE=api`:** the HTTP client sends requests to the FastAPI service at `VITE_API_BASE_URL`.
-- **Python API — `apps/api`:** FastAPI exposes planning, replanning, transport availability, services, and status endpoints. Pydantic models define the API's request and response shapes; Python engines evaluate transport, deadlines, services, opening hours, and evidence.
-- **Contracts — `packages/contracts`:** Zod schemas and TypeScript types describe the web-facing data shapes, with TypeScript evidence-decay rules. The Python API has its own Pydantic models and corresponding Python decay implementation; the TypeScript package is not imported at runtime by Python.
-- **Data — `data`:** the API engines read the checked-in Nagpur transport and service JSON assets and their provenance manifest.
-- **Android — `apps/web/android`:** Capacitor packages the web application; the Android app uses the same client and data-mode configuration.
+- **Web app — `apps/web`:** React pages and feature modules provide journey planning, maps, services, evidence, alerts, and settings. TanStack Router handles navigation; TanStack Query manages request state.
+- **Service boundary — `PlanService`:** The UI calls one interface for planning, replanning, service lookup, status, and alerts.
+- **Local mode — `VITE_DATA_MODE=mock`:** The local service runs TypeScript planning and service engines with local fixtures. MSW can separately intercept supported `/api` requests during development.
+- **API mode — `VITE_DATA_MODE=api`:** The API client sends requests to the FastAPI service at `VITE_API_BASE_URL`.
+- **Python API — `apps/api`:** FastAPI endpoints use Pydantic models and Python engines for transport, deadlines, services, opening hours, and evidence.
+- **Contracts — `packages/contracts`:** Zod schemas and TypeScript types define the web-facing data shapes. The API maintains corresponding Pydantic models and its own Python evidence-decay implementation; the TypeScript package is not imported at runtime by Python.
+- **Data — `data`:** Checked-in Nagpur transport and service JSON assets are accompanied by a provenance manifest.
+- **Android — `apps/web/android`:** Capacitor packages the web app and uses the same client configuration.
 
-The local and API paths share the service interface, not an identical implementation. The local path runs TypeScript engines and uses local fixtures; the API path runs Python engines against the JSON assets. This distinction matters when interpreting results and evidence.
+The local and API modes share the `PlanService` interface, not an identical implementation: local mode uses TypeScript engines and fixtures, while API mode uses Python engines and JSON assets.
 
 ### Planning flow
 
 ```text
-Journey form
-  → PlanService.plan(request)
-  → local TypeScript planner ──or── POST /api/plan
-  → candidate journeys and deadline evaluation
-  → route cards · map · stage timeline · evidence
-  → selection, service lookup, or replan after a change
+Journey details → PlanService → local TypeScript planner or POST /api/plan
+               → candidate journeys and deadline evaluation
+               → route cards, map, timeline, and evidence
+               → select an option, find a service, or replan after a change
 ```
 
-Service lookup follows a related flow: the client submits location, filters, and arrival context; the selected service engine searches and ranks results, evaluates opening status, and returns the available service evidence.
+Service lookup follows a similar flow: the selected service engine searches and ranks results, evaluates opening status for the expected arrival time, and returns available service evidence.
 
-## Get started
+<a id="get-started"></a>
 
-### Prerequisites
+## 🚀 Get started
+
+### Requirements
 
 - Node.js **20 or later**
 - pnpm **9 or later**
-- Python **3.11 or later** (only needed to run the API)
+- Python **3.11 or later** (only required for the API)
 
-### Start the web application
+### Run the web app
 
 From the repository root:
 
@@ -115,9 +110,9 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173). By default, the web app selects the local TypeScript service and does not require the Python API.
+Open [http://localhost:5173](http://localhost:5173). The default local mode runs without the Python API.
 
-### Start the Python API
+### Run the API
 
 In a second terminal, from the repository root:
 
@@ -129,27 +124,27 @@ python -m pip install -e .
 python -m uvicorn app.main:app --reload --port 8000
 ```
 
-Check that the API is running at [http://localhost:8000/health](http://localhost:8000/health). Interactive API documentation is available at [http://localhost:8000/docs](http://localhost:8000/docs).
+Check [http://localhost:8000/health](http://localhost:8000/health). Interactive API documentation is available at [http://localhost:8000/docs](http://localhost:8000/docs).
 
-To have the web client use the API, create `apps/web/.env`:
+To use the API from the web app, create `apps/web/.env`:
 
 ```dotenv
 VITE_DATA_MODE=api
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
-Restart the Vite development server after changing environment variables.
+Restart Vite after changing environment variables.
 
 ## Configuration
 
 | Variable            | Default                 | Description                                                              |
 | ------------------- | ----------------------- | ------------------------------------------------------------------------ |
-| `VITE_DATA_MODE`    | `mock`                  | Selects the local TypeScript service (`mock`) or FastAPI client (`api`). |
+| `VITE_DATA_MODE`    | `mock`                  | Use the local TypeScript service (`mock`) or the FastAPI client (`api`). |
 | `VITE_API_BASE_URL` | `http://localhost:8000` | Base URL used by the API client.                                         |
 
-Vite's development server also proxies `/api` requests to `http://localhost:8000`. The application selects hash-based routing when running inside the Capacitor Android WebView.
+Vite also proxies `/api` requests to `http://localhost:8000`. The app uses hash-based routing inside the Capacitor Android WebView.
 
-## Application routes
+## App routes
 
 | Path         | Page                      |
 | ------------ | ------------------------- |
@@ -172,71 +167,69 @@ Vite's development server also proxies `/api` requests to `http://localhost:8000
 | `GET`  | `/api/services/response`      | Return service results and response metadata |
 | `GET`  | `/api/status`                 | Return feed status and the data manifest     |
 
-## Repository map
+## Project structure
 
 ```text
 apps/
   web/
-    src/app/                 Bootstrap, router, environment, error boundary
+    src/app/                 App bootstrap, router, environment, error boundary
     src/routes/              Landing, dashboard, planner, services, about, tokens
     src/features/            Journey, routes, map, services, evidence, alerts,
                               connectivity, settings, onboarding, social, emergency
-    src/services/             PlanService interface and local/API implementations
-    src/lib/                  Planning, transport, services, geo and UI helpers
-    src/mocks/                MSW handlers and local fixtures
-    tests/                    Unit and browser-level suites
-    android/                  Capacitor Android project
+    src/services/            PlanService interface and local/API implementations
+    src/lib/                 Planning, transport, services, geo, and UI helpers
+    src/mocks/               MSW handlers and local fixtures
+    tests/                   Unit and browser-level suites
+    android/                 Capacitor Android project
   api/
-    app/main.py               FastAPI application and endpoints
-    app/planner/               API models and planning engines
-    app/services/              Service search and opening-hours evaluation
-    app/evidence/               Evidence freshness and decay
-    tests/                      Python API and engine checks
+    app/main.py              FastAPI application and endpoints
+    app/planner/              API models and planning engines
+    app/services/             Service search and opening-hours evaluation
+    app/evidence/              Evidence freshness and decay
+    tests/                     Python API and engine tests
 packages/
-  contracts/                   Zod schemas, TypeScript types, evidence decay
-  config/                       Shared tooling configuration
+  contracts/                  Zod schemas, TypeScript types, evidence decay
+  config/                      Shared tooling configuration
 data/
-  MANIFEST.json                 Data sources, versions and provenance
-  nagpur_transport_seed.json    Transport seed records
-  nagpur_services_seed.json     Essential-service seed records
+  MANIFEST.json                Data sources, versions, and provenance
+  nagpur_transport_seed.json   Transport seed records
+  nagpur_services_seed.json    Essential-service seed records
 docs/
-  ARCHITECTURE.md               Architecture notes
-  DATA_PROVENANCE.md            Data and evidence policy
-  DECISIONS.md                  Architecture decision records
-  DESIGN_SYSTEM.md              Design-system reference
-scripts/                        Repository helper scripts
+  ARCHITECTURE.md              Architecture notes
+  DATA_PROVENANCE.md           Data and evidence policy
+  DEMO.md                      Demo guide
+  DESIGN_SYSTEM.md             Design-system reference
+scripts/                       Repository helper scripts
 ```
 
-## Engineering
+## 🛡️ Data, evidence, and safety
 
-### Evidence and data integrity
-
-- Local Nagpur records are seed data, not live feeds. Review [`data/MANIFEST.json`](./data/MANIFEST.json) and the [data provenance policy](./docs/DATA_PROVENANCE.md) before interpreting them.
-- Evidence is labeled **KNOWN**, **PROBABLE**, **OUTDATED**, or **UNKNOWN**. Fact-specific time-to-live rules lower confidence as observations age.
-- Missing current information remains **UNKNOWN**; Noctra does not present absent ride feeds as verified availability.
+- Nagpur records in `data/` are seed data, not live feeds. Check [`data/MANIFEST.json`](./data/MANIFEST.json) and the [data provenance policy](./docs/DATA_PROVENANCE.md) before interpreting them.
+- Evidence is labeled **KNOWN**, **PROBABLE**, **OUTDATED**, or **UNKNOWN**. Fact-specific freshness windows lower confidence as observations age.
+- Missing current information remains **UNKNOWN**. Noctra does not present unavailable ride-hailing feeds as verified availability.
 - Risk is an **environmental risk proxy**, not a crime prediction or crime statistic.
-- Opening hours, route estimates, and availability should not be treated as real-time verification unless a current authoritative source is explicitly identified.
+- Opening hours, route estimates, and transport availability are not real-time verification unless a current authoritative source is explicitly identified.
 
-### Quality commands
+## Development
 
-Run from the repository root:
+Run these commands from the repository root:
 
-| Command          | Purpose                                                        |
-| ---------------- | -------------------------------------------------------------- |
-| `pnpm typecheck` | Build/check shared contracts and type-check workspace packages |
-| `pnpm lint`      | Run workspace ESLint checks                                    |
-| `pnpm test`      | Run configured workspace unit suites                           |
-| `pnpm test:e2e`  | Run the web browser-level suite                                |
-| `pnpm build`     | Build contracts and the production web application             |
-| `pnpm check`     | Run typecheck, lint, unit suites, and production build         |
+| Command          | Purpose                                                  |
+| ---------------- | -------------------------------------------------------- |
+| `pnpm typecheck` | Build shared contracts and type-check workspace packages |
+| `pnpm lint`      | Run workspace ESLint checks                              |
+| `pnpm test`      | Run configured workspace unit tests                      |
+| `pnpm test:e2e`  | Run the web browser-level suite                          |
+| `pnpm build`     | Build contracts and the production web app               |
+| `pnpm check`     | Run typecheck, lint, unit tests, and production build    |
 
-The Python suite is located in `apps/api/tests`. Run it from `apps/api` in an environment where `pytest` is installed:
+Run the Python API tests from `apps/api` in an environment with pytest installed:
 
 ```powershell
 python -m pytest
 ```
 
-### Android build
+### Build Android
 
 Build and synchronize the web assets before opening the Android project:
 
@@ -246,21 +239,15 @@ pnpm --filter @noctra/web build
 pnpm --filter @noctra/web cap:sync
 ```
 
-Then open `apps/web/android` in Android Studio to run or package the application.
+Then open `apps/web/android` in Android Studio to run or package the app.
 
 ## Technology
 
-| Area                      | Technologies                             |
-| ------------------------- | ---------------------------------------- |
-| Web client                | React 18, TypeScript, Vite, Tailwind CSS |
-| Navigation and data state | TanStack Router, TanStack Query          |
-| Maps                      | MapLibre GL JS, `react-map-gl`           |
-| Mobile                    | Capacitor 7, Android                     |
-| API                       | Python, FastAPI, Pydantic                |
-| Contracts                 | Zod, TypeScript                          |
-| Local API interception    | Mock Service Worker                      |
-| Quality                   | ESLint, Vitest, Playwright               |
-
----
-
-Built for CASCADE '26 at IIIT Nagpur. Map data © OpenStreetMap contributors.
+| Area                         | Technologies                             |
+| ---------------------------- | ---------------------------------------- |
+| Web app                      | React 18, TypeScript, Vite, Tailwind CSS |
+| Navigation and request state | TanStack Router, TanStack Query          |
+| Maps                         | MapLibre GL JS, `react-map-gl`           |
+| Mobile                       | Capacitor 7, Android                     |
+| API                          | Python, FastAPI, Pydantic                |
+| Contracts                    | Zod, TypeScript                          |
