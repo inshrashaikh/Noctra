@@ -37,7 +37,7 @@ export function BottomNav({ currentPath: propPath }: BottomNavProps) {
               key={item.href}
               to={item.href}
               className={cn(
-                'flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold transition-colors',
+                'flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold transition-all select-none cursor-pointer active:scale-95',
                 isActive
                   ? 'text-[#12233A] dark:text-[#38BDF8]'
                   : 'text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC]'
@@ -62,7 +62,7 @@ export function BottomNav({ currentPath: propPath }: BottomNavProps) {
         <button
           type="button"
           onClick={() => setIsDrawerOpen(true)}
-          className="flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-colors relative"
+          className="flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-all select-none cursor-pointer active:scale-95 relative"
         >
           <div className="flex h-7 w-12 items-center justify-center rounded-full relative">
             <Bell className="h-4 w-4" />
@@ -79,7 +79,7 @@ export function BottomNav({ currentPath: propPath }: BottomNavProps) {
         <button
           type="button"
           onClick={() => setIsSettingsOpen(true)}
-          className="flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-colors"
+          className="flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-all select-none cursor-pointer active:scale-95"
         >
           <div className="flex h-7 w-12 items-center justify-center rounded-full">
             <SettingsIcon className="h-4 w-4" />

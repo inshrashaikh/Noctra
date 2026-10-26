@@ -1,8 +1,12 @@
 import { Link } from '@tanstack/react-router';
 import { EvidenceChip } from '@/components/common/EvidenceChip';
 import { NightRibbon } from '@/features/routes/NightRibbon';
+import { useOnboarding } from '@/features/onboarding/useOnboarding';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
 export function HeroSection() {
+  const { openOnboarding } = useOnboarding();
+
   return (
     <section className="border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#F7F6F2] dark:bg-[#0B0E14] py-16 sm:py-24 lg:py-28 transition-colors">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
@@ -17,16 +21,26 @@ export function HeroSection() {
               Plan your way home with the worst case in view, a clear moment to switch plans, and an honest label on every fact.
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
                 to="/planner"
-                className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#12233A] dark:bg-[#38BDF8] px-6 text-sm font-semibold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors"
+                className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#12233A] dark:bg-[#38BDF8] px-6 text-sm font-semibold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors gap-2 shadow-sm"
               >
-                Plan My Journey
+                <span>Plan My Journey</span>
+                <ArrowRight className="h-4 w-4" />
               </Link>
+              <button
+                type="button"
+                onClick={openOnboarding}
+                className="inline-flex h-11 items-center justify-center rounded-[10px] border border-noctra-border bg-noctra-surface px-5 text-sm font-semibold text-noctra-text hover:bg-noctra-raised transition-colors gap-2"
+                title="Launch interactive Get Started orientation"
+              >
+                <Sparkles className="h-4 w-4 text-noctra-accent" />
+                <span>Get Started Guide</span>
+              </button>
               <a
                 href="#how-it-works"
-                className="inline-flex h-11 items-center justify-center text-sm font-semibold text-[#14181D] dark:text-[#F8FAFC] hover:underline transition-colors"
+                className="inline-flex h-11 items-center justify-center text-sm font-semibold text-[#14181D] dark:text-[#F8FAFC] hover:underline transition-colors px-2"
               >
                 See how it decides →
               </a>

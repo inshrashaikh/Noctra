@@ -16,7 +16,7 @@ export function FinalCta() {
 
           <Link
             to="/planner"
-            className="inline-flex h-11 shrink-0 items-center justify-center rounded-[10px] bg-[#12233A] dark:bg-[#38BDF8] px-6 text-sm font-semibold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors"
+            className="inline-flex h-11 shrink-0 items-center justify-center rounded-[10px] bg-[#12233A] dark:bg-[#38BDF8] px-6 text-sm font-semibold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors shadow-sm"
           >
             Plan My Journey
           </Link>

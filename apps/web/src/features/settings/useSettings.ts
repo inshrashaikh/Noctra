@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useOnboarding } from '@/features/onboarding/useOnboarding';
 import type { TransportMode } from '@noctra/contracts';
 
 interface SettingsState {
@@ -44,7 +45,14 @@ export const useSettings = create<SettingsState>()(
       hasSeenOnboarding: false,
       setHasSeenOnboarding: (hasSeenOnboarding) => set({ hasSeenOnboarding }),
       isOnboardingOpen: false,
-      setIsOnboardingOpen: (isOnboardingOpen) => set({ isOnboardingOpen }),
+      setIsOnboardingOpen: (isOnboardingOpen) => {
+        set({ isOnboardingOpen });
+        if (isOnboardingOpen) {
+          useOnboarding.getState().openOnboarding();
+        } else {
+          useOnboarding.getState().closeOnboarding();
+        }
+      },
       isSettingsOpen: false,
       setIsSettingsOpen: (isSettingsOpen) => set({ isSettingsOpen }),
       isTrustedCircleOpen: false,

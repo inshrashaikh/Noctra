@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Menu, X, Settings as SettingsIcon, Sun, Moon, PhoneCall } from 'lucide-react';
+import { Menu, X, Settings as SettingsIcon, Sun, Moon, PhoneCall, Sparkles } from 'lucide-react';
 import { useSettings } from '@/features/settings/useSettings';
 import { useTheme } from '@/features/theme/useTheme';
+import { useOnboarding } from '@/features/onboarding/useOnboarding';
 import { cn } from '@/lib/cn';
 
 export interface NavbarProps {
@@ -14,6 +15,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { setIsSettingsOpen } = useSettings();
   const { theme, toggleTheme } = useTheme();
+  const { openOnboarding } = useOnboarding();
 
   const marketingLinks = [
     { label: 'How it works', href: '#how-it-works' },
@@ -101,29 +103,40 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
         </nav>
 
         {/* Right Zone: Controls & Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Quick SOS Emergency Call Button */}
           <a
             href="tel:112"
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-bold hover:bg-rose-500/20 transition-all active:scale-95"
+            className="inline-flex items-center justify-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3 text-xs font-bold rounded-lg border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
             title="Emergency SOS 112"
           >
-            <PhoneCall className="h-3.5 w-3.5 animate-pulse text-rose-500" />
-            <span className="font-mono tracking-wider">112 SOS</span>
+            <PhoneCall className="h-3 w-3 sm:h-3.5 sm:w-3.5 animate-pulse text-rose-600 dark:text-rose-400" />
+            <span className="font-mono tracking-wider">112</span>
           </a>
+
+          {/* Get Started Guide Tour Button */}
+          <button
+            type="button"
+            onClick={openOnboarding}
+            className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-lg border border-noctra-border bg-noctra-surface text-noctra-text hover:bg-noctra-raised transition-colors"
+            title="Open Night Shift Safety Guide"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-noctra-accent" />
+            <span>Get Started</span>
+          </button>
 
           {/* Theme Toggle Button */}
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#1A212E] text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-colors"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg border border-noctra-border bg-noctra-surface text-noctra-muted hover:text-noctra-text hover:bg-noctra-raised transition-colors"
             aria-label="Toggle theme"
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-amber-400 transition-transform hover:rotate-45" />
+              <Sun className="h-4 w-4 text-amber-400" />
             ) : (
-              <Moon className="h-4 w-4 text-[#12233A] transition-transform hover:-rotate-12" />
+              <Moon className="h-4 w-4 text-noctra-text" />
             )}
           </button>
 
@@ -131,7 +144,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
           <button
             type="button"
             onClick={() => setIsSettingsOpen(true)}
-            className="hidden sm:flex h-9 w-9 items-center justify-center rounded-lg border border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#1A212E] text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-colors"
+            className="hidden sm:flex h-9 w-9 items-center justify-center rounded-lg border border-noctra-border bg-noctra-surface text-noctra-muted hover:text-noctra-text hover:bg-noctra-raised transition-colors"
             aria-label="Settings"
           >
             <SettingsIcon className="h-4 w-4" />
@@ -140,7 +153,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
           {/* Primary CTA (Desktop) */}
           <Link
             to="/planner"
-            className="hidden md:inline-flex h-9 items-center justify-center rounded-lg bg-[#12233A] dark:bg-[#38BDF8] px-4 text-xs font-bold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors"
+            className="hidden md:inline-flex items-center justify-center h-9 px-4 text-xs font-semibold rounded-lg bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors"
           >
             Plan Journey
           </Link>
@@ -149,7 +162,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#1A212E] text-[#5B6672] dark:text-[#94A3B8] md:hidden hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-colors"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg border border-noctra-border bg-noctra-surface text-noctra-muted md:hidden hover:text-noctra-text hover:bg-noctra-raised transition-colors"
             aria-label="Toggle navigation menu"
             aria-expanded={isMobileMenuOpen}
           >
@@ -160,7 +173,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
 
       {/* Full-width Mobile Dropdown Menu (< 768px) */}
       {isMobileMenuOpen && (
-        <div className="border-t border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#131822] px-4 py-3 md:hidden space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-150">
+        <div className="border-t border-noctra-border bg-noctra-surface px-4 py-3 md:hidden space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-150">
           <nav className="flex flex-col gap-1" aria-label="Mobile Navigation">
             {links.map((link) => {
               const isAnchor = link.href.startsWith('#');
@@ -170,7 +183,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex h-9 items-center rounded-lg px-3 text-sm font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:bg-[#F1EFE8] dark:hover:bg-[#1A212E] hover:text-[#14181D] dark:hover:text-[#F8FAFC]"
+                    className="flex h-9 items-center rounded-lg px-3 text-sm font-semibold text-noctra-muted hover:bg-noctra-raised hover:text-noctra-text"
                   >
                     {link.label}
                   </a>
@@ -182,7 +195,7 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
                   key={link.href}
                   to={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex h-9 items-center rounded-lg px-3 text-sm font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:bg-[#F1EFE8] dark:hover:bg-[#1A212E] hover:text-[#14181D] dark:hover:text-[#F8FAFC]"
+                  className="flex h-9 items-center rounded-lg px-3 text-sm font-semibold text-noctra-muted hover:bg-noctra-raised hover:text-noctra-text"
                 >
                   {link.label}
                 </Link>
@@ -190,22 +203,33 @@ export function Navbar({ currentPath = '/', mode = 'marketing' }: NavbarProps) {
             })}
           </nav>
 
-          <div className="pt-2 border-t border-[#E2DED3] dark:border-[#232C3E] flex flex-col gap-2">
+          <div className="pt-2 border-t border-noctra-border flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                openOnboarding();
+              }}
+              className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-noctra-border bg-noctra-surface text-xs font-semibold text-noctra-text hover:bg-noctra-raised transition-colors"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-noctra-accent" />
+              <span>Get Started Briefing</span>
+            </button>
             <button
               type="button"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 setIsSettingsOpen(true);
               }}
-              className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#1A212E] text-xs font-semibold text-[#5B6672] dark:text-[#94A3B8]"
+              className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-noctra-border bg-noctra-surface text-xs font-semibold text-noctra-text hover:bg-noctra-raised transition-colors"
             >
-              <SettingsIcon className="h-4 w-4" />
+              <SettingsIcon className="h-4 w-4 text-noctra-muted" />
               <span>Settings &amp; Safe Mode</span>
             </button>
             <Link
               to="/planner"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex h-9 w-full items-center justify-center rounded-lg bg-[#12233A] dark:bg-[#38BDF8] text-xs font-bold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252]"
+              className="flex h-9 w-full items-center justify-center rounded-lg bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14] text-xs font-semibold hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors"
             >
               Plan My Journey
             </Link>

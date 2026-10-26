@@ -128,9 +128,9 @@ export function MarketingNavbar() {
           {/* Open Planner CTA */}
           <Link
             to="/planner"
-            className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg bg-noctra-accent px-4 py-1.5 text-xs font-bold text-noctra-bg shadow-sm transition-colors hover:bg-noctra-accent-hover lamp-glow"
+            className="inline-flex items-center justify-center min-h-[38px] px-4 py-1.5 text-xs font-semibold rounded-lg bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors gap-1.5"
           >
-            <Sparkles className="h-3.5 w-3.5" />
+            <Sparkles className="h-3.5 w-3.5 text-amber-300 dark:text-[#0B0E14]" />
             <span>Open Planner</span>
           </Link>
         </div>

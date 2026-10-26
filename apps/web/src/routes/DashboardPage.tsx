@@ -257,8 +257,8 @@ export function DashboardPage() {
                     className={cn(
                       'rounded px-2.5 py-1 text-[11px] font-mono font-medium transition-colors select-none',
                       isCur
-                        ? 'bg-[#12233A] text-[#FFFFFF] font-bold shadow-xs'
-                        : 'text-[#5B6672] hover:text-[#14181D]'
+                        ? 'bg-[#12233A] dark:bg-[#38BDF8] text-[#FFFFFF] dark:text-[#0B0E14] font-bold shadow-xs'
+                        : 'text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC]'
                     )}
                   >
                     {p.shift}
@@ -455,8 +455,8 @@ export function DashboardPage() {
                       className={cn(
                         'flex-1 py-3 text-xs font-semibold capitalize transition-colors',
                         activeTab === tab
-                          ? 'border-b-2 border-[#12233A] bg-[#F1EFE8] text-[#12233A]'
-                          : 'text-[#5B6672] hover:text-[#14181D]'
+                          ? 'border-b-2 border-[#12233A] dark:border-[#38BDF8] bg-[#F1EFE8] dark:bg-[#1A212E] text-[#12233A] dark:text-[#38BDF8]'
+                          : 'text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC]'
                       )}
                     >
                       {tab}
