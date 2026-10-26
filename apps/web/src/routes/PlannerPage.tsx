@@ -8,6 +8,7 @@ import { MapView } from '@/features/map/MapView';
 import { RouteList } from '@/features/routes/RouteList';
 import { NightRibbon } from '@/features/routes/NightRibbon';
 import { RouteStageTimeline } from '@/features/routes/RouteStageTimeline';
+import { PlanVerdictPanel } from '@/features/routes/PlanVerdictPanel';
 import { useRouteSelection } from '@/features/routes/useRouteSelection';
 import { LiveTripModal } from '@/features/routes/LiveTripModal';
 
@@ -263,6 +264,16 @@ export function PlannerPage() {
             {/* Results Section */}
             {plan && !isLoading && (
               <>
+                {/* Decision Engine Verdict & Safe-Haven Handoff */}
+                {plan.verdict && (
+                  <PlanVerdictPanel
+                    verdict={plan.verdict}
+                    safeHaven={plan.safe_haven_handoff}
+                    shiftEndTime={formData.shiftEndTime}
+                    deadlineTime={formData.deadlineTime}
+                  />
+                )}
+
                 {/* Route Candidate List */}
                 <RouteList candidates={plan.candidates} />
 

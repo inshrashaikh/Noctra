@@ -18,6 +18,7 @@ from app.planner.schemas import (
     TransportAvailabilityResponse,
 )
 from app.planner.transport_engine import transport_engine
+from app.planner.deadline_engine import deadline_engine
 from app.services.service_finder import find_and_rank_services
 
 app = FastAPI(
@@ -52,25 +53,14 @@ def health_check():
 
 @app.post("/api/plan", response_model=PlanResponse)
 def create_plan(req: PlanRequest):
-    """Evaluate nocturnal transport availability and return candidates for the worker's shift window."""
-    return transport_engine.plan(req)
+    """Module 3: Evaluate nocturnal transport availability, deadlines, stranding and safe-havens."""
+    return deadline_engine.plan(req)
 
 
 @app.post("/api/replan", response_model=PlanResponse)
 def replan(req: ReplanRequest):
-    """Replan journey upon detected road closure or feed degradation."""
-    plan = transport_engine.plan(req)
-    # If closure scenario, mark fastest auto route as AT_RISK or reroute
-    if req.reason and "closure" in req.reason.lower():
-        for c in plan.candidates:
-            if c.mode == "auto":
-                c.status = "AT_RISK"
-                c.reject_reasons.append("Road closure detected along Wardha Road underpass; detour adds 6m")
-                c.eta.expected_min += 6.0
-                c.eta.pessimistic_min += 10.0
-                c.slack_min.expected -= 6.0
-                c.slack_min.pessimistic -= 10.0
-    return plan
+    """Module 3: Replan journey upon disruption with previous-vs-new verdict diff."""
+    return deadline_engine.replan(req)
 
 
 @app.get("/api/transport/availability", response_model=TransportAvailabilityResponse)
