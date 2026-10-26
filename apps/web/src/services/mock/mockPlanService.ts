@@ -11,11 +11,9 @@ import type { PlanService } from '../planService';
 import type { AlertEvent } from '@/types/domain';
 import { NURSE_PLAN_RESPONSE } from '@/mocks/fixtures/nurse-2-15am';
 import { STATUS_FIXTURE } from '@/mocks/fixtures/status';
-import { applyClosureScenario } from '@/mocks/fixtures/closure-scenario';
-import { applyRideUnknownScenario } from '@/mocks/fixtures/ride-unknown';
 import { TIER_2_PLAN_RESPONSE, TIER_2_STATUS } from '@/mocks/fixtures/tier-2';
-import { generatePlan } from '@/lib/transportEngine';
 import { findAndRankServices } from '@/lib/servicesEngine';
+import { planWithDeadlines, replanWithDeadlines } from '@/lib/deadlineEngine';
 
 class MockPlanServiceImpl implements PlanService {
   private currentPlan: PlanResponse = structuredClone(NURSE_PLAN_RESPONSE);
@@ -26,13 +24,13 @@ class MockPlanServiceImpl implements PlanService {
   async plan(req: PlanRequest): Promise<PlanResponse> {
     // Artificial small delay for realistic UX feeling
     await new Promise((r) => setTimeout(r, 80));
-    this.currentPlan = generatePlan(req);
+    this.currentPlan = planWithDeadlines(req);
     return structuredClone(this.currentPlan);
   }
 
   async replan(req: ReplanRequest): Promise<PlanResponse> {
     await new Promise((r) => setTimeout(r, 100));
-    this.currentPlan = generatePlan(req);
+    this.currentPlan = planWithDeadlines(req);
     if (req.reason?.includes('closure')) {
       for (const c of this.currentPlan.candidates) {
         if (c.mode === 'auto') {
@@ -72,12 +70,22 @@ class MockPlanServiceImpl implements PlanService {
   async sendSimEvent(event: SimEvent): Promise<void> {
     switch (event.type) {
       case 'closure': {
-        this.currentPlan = applyClosureScenario();
+        const prev = this.currentPlan;
+        this.currentPlan = replanWithDeadlines({
+          origin: { lat: 21.0378, lon: 79.0345 },
+          destination: { lat: 21.1458, lon: 79.0882 },
+          shift_end_iso: '2026-10-25T02:15:00+05:30',
+          deadline_iso: '2026-10-25T03:00:00+05:30',
+          modes: ['transit', 'auto', 'cab', 'two_wheeler', 'walk'],
+          reason: 'Road closure detected near Ramdaspeth on Wardha Road',
+          scenario_type: 'closure',
+          previous_plan: prev,
+        });
         this.dispatchAlert({
           id: `alert-closure-${Date.now()}`,
           severity: 'warning',
           title: 'Road Closure Detected',
-          body: 'Wardha Road closed near Ramdaspeth due to water main break. Rerouting.',
+          body: 'Wardha Road closed near Ramdaspeth due to burst pipe. Detour adds 6m.',
           timestamp_iso: new Date().toISOString(),
           dismissible: true,
           source_class: 'simulated',
@@ -85,7 +93,13 @@ class MockPlanServiceImpl implements PlanService {
         break;
       }
       case 'clear_closure': {
-        this.currentPlan = structuredClone(NURSE_PLAN_RESPONSE);
+        this.currentPlan = planWithDeadlines({
+          origin: { lat: 21.0378, lon: 79.0345 },
+          destination: { lat: 21.1458, lon: 79.0882 },
+          shift_end_iso: '2026-10-25T02:15:00+05:30',
+          deadline_iso: '2026-10-25T03:00:00+05:30',
+          modes: ['transit', 'auto', 'cab', 'two_wheeler', 'walk'],
+        });
         this.dispatchAlert({
           id: `alert-clear-${Date.now()}`,
           severity: 'info',
@@ -98,7 +112,17 @@ class MockPlanServiceImpl implements PlanService {
         break;
       }
       case 'ride_unavailable': {
-        this.currentPlan = applyRideUnknownScenario();
+        const prev = this.currentPlan;
+        this.currentPlan = replanWithDeadlines({
+          origin: { lat: 21.0378, lon: 79.0345 },
+          destination: { lat: 21.1458, lon: 79.0882 },
+          shift_end_iso: '2026-10-25T02:15:00+05:30',
+          deadline_iso: '2026-10-25T03:00:00+05:30',
+          modes: ['transit', 'auto', 'cab', 'two_wheeler', 'walk'],
+          reason: 'Ride availability feeds degraded to UNKNOWN',
+          scenario_type: 'ride_unavailable',
+          previous_plan: prev,
+        });
         this.dispatchAlert({
           id: `alert-ride-${Date.now()}`,
           severity: 'warning',
@@ -111,7 +135,13 @@ class MockPlanServiceImpl implements PlanService {
         break;
       }
       case 'ride_available': {
-        this.currentPlan = structuredClone(NURSE_PLAN_RESPONSE);
+        this.currentPlan = planWithDeadlines({
+          origin: { lat: 21.0378, lon: 79.0345 },
+          destination: { lat: 21.1458, lon: 79.0882 },
+          shift_end_iso: '2026-10-25T02:15:00+05:30',
+          deadline_iso: '2026-10-25T03:00:00+05:30',
+          modes: ['transit', 'auto', 'cab', 'two_wheeler', 'walk'],
+        });
         break;
       }
       case 'feed_outage':

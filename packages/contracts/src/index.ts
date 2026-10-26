@@ -14,16 +14,28 @@ export {
   EvidenceSchema,
   PlanBSchema,
   ExplanationSchema,
+  CoordinatesSchema,
+  GeoJSONLineStringSchema,
   // Services
   ServicesRequestSchema,
   ServiceSchema,
+  ServicesResponseSchema,
   // Status
   StatusResponseSchema,
   FeedStatusSchema,
   // Replan
   ReplanRequestSchema,
+  ReplanDiffSchema,
   // Sim
   SimEventSchema,
+  // Module 3
+  JourneyLegSchema,
+  StrandingPointSchema,
+  RecoveryOptionSchema,
+  SafeHavenHandoffSchema,
+  ScenarioResultSchema,
+  PlanVerdictSchema,
+  OperatingStatusModeSchema,
   // Enums / literals
   TransportModeSchema,
   RouteKindSchema,
@@ -34,7 +46,6 @@ export {
   ServiceKindSchema,
   NeedTypeSchema,
   OpeningStatusSchema,
-  ServicesResponseSchema,
   FactTypeSchema,
 } from './schemas.js';
 
@@ -48,12 +59,23 @@ export type {
   Evidence,
   PlanB,
   Explanation,
+  Coordinates,
+  GeoJSONLineString,
   ServicesRequest,
   Service,
+  ServicesResponse,
   StatusResponse,
   FeedStatus,
   ReplanRequest,
+  ReplanDiff,
   SimEvent,
+  JourneyLeg,
+  StrandingPoint,
+  RecoveryOption,
+  SafeHavenHandoff,
+  ScenarioResult,
+  PlanVerdict,
+  OperatingStatusMode,
   TransportMode,
   RouteKind,
   CandidateStatus,
@@ -63,7 +85,6 @@ export type {
   ServiceKind,
   NeedType,
   OpeningStatus,
-  ServicesResponse,
   FactType,
 } from './schemas.js';
 
