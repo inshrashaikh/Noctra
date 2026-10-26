@@ -1,7 +1,7 @@
 import { Link, useLocation } from '@tanstack/react-router';
-import { Navigation, LayoutDashboard, Cross, Bell, Settings as SettingsIcon } from 'lucide-react';
+import { Navigation, LayoutDashboard, Cross, Bell, ShieldAlert } from 'lucide-react';
 import { useAlerts } from '@/features/alerts/useAlerts';
-import { useSettings } from '@/features/settings/useSettings';
+import { useEmergencyChatbot } from '@/features/chatbot/useEmergencyChatbot';
 import { cn } from '@/lib/cn';
 
 interface BottomNavProps {
@@ -12,7 +12,6 @@ export function BottomNav({ currentPath: propPath }: BottomNavProps) {
   const location = useLocation();
   const currentPath = propPath || location.pathname;
   const { alerts, setIsDrawerOpen } = useAlerts();
-  const { setIsSettingsOpen } = useSettings();
 
   const navItems = [
     { label: 'Plan', href: '/planner', icon: Navigation },
@@ -58,6 +57,19 @@ export function BottomNav({ currentPath: propPath }: BottomNavProps) {
           );
         })}
 
+        {/* SOS Guide Emergency Button */}
+        <button
+          type="button"
+          onClick={() => useEmergencyChatbot.getState().openChat()}
+          className="flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold text-rose-500 hover:text-rose-400 transition-all select-none cursor-pointer active:scale-95"
+          aria-label="Open SOS Crisis Assistant"
+        >
+          <div className="flex h-7 w-12 items-center justify-center rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400">
+            <ShieldAlert className="h-4 w-4" />
+          </div>
+          <span className="leading-none font-bold">SOS</span>
+        </button>
+
         {/* Alerts button */}
         <button
           type="button"
@@ -73,18 +85,6 @@ export function BottomNav({ currentPath: propPath }: BottomNavProps) {
             )}
           </div>
           <span className="leading-none">Alerts</span>
-        </button>
-
-        {/* Settings button */}
-        <button
-          type="button"
-          onClick={() => setIsSettingsOpen(true)}
-          className="flex flex-col items-center justify-center gap-1 py-1 text-[11px] font-semibold text-[#5B6672] dark:text-[#94A3B8] hover:text-[#14181D] dark:hover:text-[#F8FAFC] transition-all select-none cursor-pointer active:scale-95"
-        >
-          <div className="flex h-7 w-12 items-center justify-center rounded-full">
-            <SettingsIcon className="h-4 w-4" />
-          </div>
-          <span className="leading-none">Settings</span>
         </button>
       </div>
     </nav>
