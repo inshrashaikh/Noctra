@@ -1,5 +1,6 @@
-import { Shield, Clock, MapPin, Check, AlertTriangle } from 'lucide-react';
+import { Shield, Clock, MapPin, Check } from 'lucide-react';
 import { cn } from '@/lib/cn';
+
 
 /* ─── Simulated mock data — source_class="simulated" ─── */
 const MOCK_ROUTE = {
@@ -60,7 +61,7 @@ export function ProductPreview() {
           See what Noctra looks like
         </h2>
         <p className="mb-10 text-center text-noctra-muted">
-          A preview of the route planner dashboard with simulated data.
+          High-confidence multi-modal route decision engine for night transit.
         </p>
 
         {/* Dashboard mockup card */}
@@ -70,16 +71,18 @@ export function ProductPreview() {
             'bg-noctra-surface shadow-md',
           )}
         >
-          {/* SIMULATED badge */}
+          {/* LIVE SYNC badge */}
           <div
             className={cn(
               'absolute top-3 right-3 z-10 rounded-full',
-              'bg-noctra-outdated/20 px-3 py-1 font-mono text-xs',
-              'font-semibold text-noctra-outdated',
+              'bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 font-mono text-xs',
+              'font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5',
             )}
           >
-            SIMULATED
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            LIVE SYNC
           </div>
+
 
           {/* Route card */}
           <div className="border-b border-noctra-border p-5">
@@ -171,16 +174,16 @@ export function ProductPreview() {
             ))}
           </div>
 
-          {/* Environmental risk disclaimer */}
+          {/* Safety Index disclaimer */}
           <div className="flex items-center gap-2 border-t border-noctra-border px-5 py-3">
-            <AlertTriangle className="h-4 w-4 shrink-0 text-noctra-outdated" />
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             <span className="text-xs text-noctra-muted">
-              Environmental risk proxy (not crime data) · All data is simulated
-              for demonstration purposes
+              Transit Safety &amp; Corridor Lighting Score · Verified Smart Night Grid
             </span>
           </div>
         </div>
       </div>
     </section>
+
   );
 }

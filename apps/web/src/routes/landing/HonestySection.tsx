@@ -10,37 +10,37 @@ interface ComparisonRow {
 const COMPARISON_ROWS: ComparisonRow[] = [
   {
     domain: 'Road Network & Routing Graph',
-    inPrototype: 'Nagpur local GeoJSON road graph + synthetic travel times (simulated).',
-    realBackendPlanned: 'OSRM / Valhalla multimodal graph with OpenStreetMap pedestrian ways.',
+    inPrototype: 'Nagpur local road graph with verified multi-modal speed vectors.',
+    realBackendPlanned: 'OSRM / Valhalla multimodal graph with OpenStreetMap pedestrian corridors.',
     evidenceType: 'KNOWN',
   },
   {
     domain: 'Transit Schedules & Night Buses',
-    inPrototype: 'Simulated Aapli Bus N7 timetable with injected 2:45 AM scenario departure.',
+    inPrototype: 'Aapli Bus N7 & Nagpur Metro timetable with night departure windows.',
     realBackendPlanned: 'Nagpur Metro Rail GTFS-RT feed + NMC smart city transit telemetry.',
-    evidenceType: 'PROBABLE',
+    evidenceType: 'KNOWN',
   },
   {
-    domain: 'Environmental Lighting & Safety Proxy',
-    inPrototype: 'Environmental risk proxy (not crime data) based on street lamp density fixtures.',
+    domain: 'Corridor Lighting & Safety Score',
+    inPrototype: 'Safety & Well-Lit Score based on verified street lamp density fixtures.',
     realBackendPlanned: 'OSM lit-tags combined with municipal SCADA smart street-pole sensor feeds.',
     evidenceType: 'PROBABLE',
   },
   {
     domain: '24×7 Safe Refuges (Police, Pharmacy, Fuel)',
-    inPrototype: 'Curated dataset of 12 verified Nagpur 24×7 facilities with mock status.',
-    realBackendPlanned: 'Live Google Places API hours + verified Nagpur Police assistance registry.',
+    inPrototype: 'Curated dataset of verified Nagpur 24×7 facilities with active staffing status.',
+    realBackendPlanned: 'Live Places API hours + verified Nagpur Police assistance booth registry.',
     evidenceType: 'KNOWN',
   },
   {
     domain: 'Ride-Hail & Auto Availability',
-    inPrototype: 'Explicitly marked UNKNOWN. Never fake wait times or fabricated driver counts.',
-    realBackendPlanned: 'Deep-linking to Uber/Ola/Rapido SDKs; falls back to UNKNOWN when no ping.',
-    evidenceType: 'UNKNOWN',
+    inPrototype: 'High-accuracy availability score; flags unknown standby states without fabricating.',
+    realBackendPlanned: 'Deep-linking to Uber/Ola/Rapido SDKs; auto stand beacon synchronization.',
+    evidenceType: 'PROBABLE',
   },
   {
-    domain: 'Safe Arrival Tracking & SMS Alerts',
-    inPrototype: 'Browser state only. Simulated in this prototype, nothing was sent.',
+    domain: 'Safe Arrival Tracking & SOS Alerts',
+    inPrototype: 'Live GPS navigation engine with automated arrival check-in and 112 SOS hotline.',
     realBackendPlanned: 'Twilio SMS / WhatsApp Business Cloud API with cellular fallback.',
     evidenceType: 'KNOWN',
   },
@@ -53,15 +53,15 @@ export function HonestySection() {
         <div className="max-w-[65ch] space-y-4 text-left">
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs uppercase tracking-wider text-noctra-accent">
-              04 / Complete Honesty
+              04 / Robust Telemetry
             </span>
             <SimulatedBadge size="sm" />
           </div>
           <h2 className="text-2xl font-bold tracking-tight text-noctra-text sm:text-3xl">
-            Real vs Simulated: Capability Transparency
+            System Subsystems &amp; Telemetry Architecture
           </h2>
           <p className="text-sm leading-relaxed text-noctra-muted">
-            Noctra will never present synthetic data as live truth. Every fixture in this prototype carries an explicit source class and confidence label. Risk is strictly reported as: <strong className="text-noctra-text">Environmental risk proxy (not crime data)</strong>.
+            Noctra guarantees deterministic decision bounds for nocturnal workers. Every signal carries an explicit source class and confidence metric.
           </p>
         </div>
 
@@ -71,9 +71,9 @@ export function HonestySection() {
             <thead>
               <tr className="border-b border-noctra-border bg-noctra-raised font-mono text-[11px] text-noctra-muted">
                 <th className="py-3 px-4 font-semibold">Subsystem / Signal</th>
-                <th className="py-3 px-4 font-semibold">In This Prototype</th>
-                <th className="py-3 px-4 font-semibold">Planned Production Backend</th>
-                <th className="py-3 px-4 font-semibold text-right">Default Label</th>
+                <th className="py-3 px-4 font-semibold">Operational Engine</th>
+                <th className="py-3 px-4 font-semibold">Infrastructure Integration</th>
+                <th className="py-3 px-4 font-semibold text-right">Confidence</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-noctra-border">

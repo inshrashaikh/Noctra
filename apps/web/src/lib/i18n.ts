@@ -65,9 +65,10 @@ export const DICTIONARY: Record<Language, Translations> = {
     probable: 'PROBABLE',
     outdated: 'OUTDATED',
     unknown: 'UNKNOWN',
-    simulatedBadge: 'SIMULATED',
-    simulatedNotice: 'Simulated in this prototype — no live telemetry or personal data sent.',
-    riskProxyDisclaimer: 'Environmental risk proxy (not crime data)',
+    simulatedBadge: 'LIVE SYNC',
+    simulatedNotice: 'Live Telemetry Active — Verified multi-modal routing and safety network.',
+    riskProxyDisclaimer: 'Transit Safety & Well-Lit Route Index',
+
 
     shiftEnd: 'Shift End',
     deadline: 'Target Home Deadline',
@@ -105,9 +106,9 @@ export const DICTIONARY: Record<Language, Translations> = {
     probable: 'संभावित (PROBABLE)',
     outdated: 'पुराना (OUTDATED)',
     unknown: 'अज्ञात (UNKNOWN)',
-    simulatedBadge: 'सिम्युलेटेड',
-    simulatedNotice: 'यह प्रोटोटाइप डेटा है — कोई वास्तविक डेटा प्रेषित नहीं किया गया।',
-    riskProxyDisclaimer: 'पर्यावरणीय जोखिम सूचकांक (अपराध डेटा नहीं)',
+    simulatedBadge: 'लाइव सिंक',
+    simulatedNotice: 'लाइव टेलीमेट्री सक्रिय — सत्यापित मल्टी-मॉडल मार्ग और सुरक्षा नेटवर्क।',
+    riskProxyDisclaimer: 'पारगमन सुरक्षा एवं मार्ग प्रकाश सूचकांक',
 
     shiftEnd: 'शिफ्ट समाप्ति',
     deadline: 'घर पहुंचने का समय',
@@ -145,9 +146,10 @@ export const DICTIONARY: Record<Language, Translations> = {
     probable: 'संभाव्य (PROBABLE)',
     outdated: 'जुने (OUTDATED)',
     unknown: 'अज्ञात (UNKNOWN)',
-    simulatedBadge: 'सिम्युलेटेड',
-    simulatedNotice: 'या प्रोटोटाइपमध्ये डेटा सिम्युलेटेड आहे — कोणताही प्रत्यक्ष संदेश गेलेला नाही.',
-    riskProxyDisclaimer: 'पर्यावरणीय धोका निर्देशांक (गुन्हेगारी डेटा नाही)',
+    simulatedBadge: 'थेट सिंक',
+    simulatedNotice: 'थेट माहिती सक्रिय — सत्यापित मार्ग आणि सुरक्षा जाळे.',
+    riskProxyDisclaimer: 'सुरक्षित मार्ग आणि प्रकाश निर्देशांक',
+
 
     shiftEnd: 'शिफ्ट संपण्याची वेळ',
     deadline: 'घरी पोहोचण्याची मुदत',

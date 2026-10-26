@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom/client';
 import { App } from '@/app/App';
 
 async function bootstrap() {
-  // Start MSW in mock mode
-  if (import.meta.env.VITE_DATA_MODE === 'mock') {
+  // MSW is only needed in the Vite dev server. The APK uses mockPlanService
+  // directly, and service workers are unreliable in Capacitor WebView.
+  if (import.meta.env.DEV && import.meta.env.VITE_DATA_MODE === 'mock') {
     const { worker } = await import('@/mocks/browser');
     await worker.start({
       onUnhandledRequest: 'bypass',

@@ -3,7 +3,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { Toaster } from 'sonner';
 import { router } from './router';
 import { ErrorBoundary } from './ErrorBoundary';
-import { OnboardingModal } from '@/features/settings/OnboardingModal';
+import { OnboardingModal } from '@/features/onboarding/OnboardingModal';
 import { SettingsModal } from '@/features/settings/SettingsModal';
 import { TrustedCircleModal } from '@/features/social/TrustedCircleModal';
 import { CommunityNotesModal } from '@/features/social/CommunityNotesModal';

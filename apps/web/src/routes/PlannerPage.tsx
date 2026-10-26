@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { planService } from '@/services';
-import type { PlanResponse, Evidence, Service } from '@noctra/contracts';
+import type { PlanResponse, Evidence, Service, Candidate } from '@noctra/contracts';
 import { JourneyForm } from '@/features/journey/JourneyForm';
 import { useJourneyStore, type JourneyFormData, DEFAULT_JOURNEY_VALUES } from '@/features/journey/useJourneyForm';
 import { MapView } from '@/features/map/MapView';
@@ -10,6 +10,8 @@ import { NightRibbon } from '@/features/routes/NightRibbon';
 import { RouteStageTimeline } from '@/features/routes/RouteStageTimeline';
 import { PlanVerdictPanel } from '@/features/routes/PlanVerdictPanel';
 import { useRouteSelection } from '@/features/routes/useRouteSelection';
+import { LiveTripModal } from '@/features/routes/LiveTripModal';
+
 import { ServicesPanel } from '@/features/services/ServicesPanel';
 import { FreshnessMeter } from '@/features/evidence/FreshnessMeter';
 import { EvidenceDrawer } from '@/features/evidence/EvidenceDrawer';
@@ -28,18 +30,31 @@ export function PlannerPage() {
   const isDemo = typeof window !== 'undefined' && window.location.search.includes('demo=1');
   const [activeTabMobile, setActiveTabMobile] = useState<'routes' | 'map' | 'details'>('routes');
   const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null);
+  const [activeTrip, setActiveTrip] = useState<Candidate | null>(null);
 
   const { selectedRouteId, setSelectedRouteId } = useRouteSelection();
   const { pickMode, setPickMode } = useJourneyStore();
 
   const [formData, setFormData] = useState<JourneyFormData>(DEFAULT_JOURNEY_VALUES);
 
-  // Subscribe to real-time & simulated alerts
+  // Subscribe to real-time & live alerts
   useEffect(() => {
     const unsub = planService.subscribeAlerts((alert) => {
       useAlerts.getState().addAlert(alert);
     });
     return unsub;
+  }, []);
+
+  // Listen for navigation trip start
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const customEvent = e as CustomEvent<Candidate>;
+      if (customEvent.detail) {
+        setActiveTrip(customEvent.detail);
+      }
+    };
+    window.addEventListener('noctra:start-trip', handler);
+    return () => window.removeEventListener('noctra:start-trip', handler);
   }, []);
 
   // Load plan query
@@ -139,14 +154,14 @@ export function PlannerPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-41px)] w-full flex-col overflow-hidden bg-noctra-bg">
+    <div className="flex flex-1 flex-col min-h-0 h-full w-full overflow-hidden bg-noctra-bg">
       {/* Planner Sub-header / Constraints Strip */}
-      <div className="flex h-14 shrink-0 items-center justify-between border-b border-noctra-border bg-noctra-surface px-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 font-semibold text-xs text-noctra-text">
-            <span className="text-noctra-muted">Journey Route Analysis:</span>
+      <div className="flex h-11 sm:h-12 shrink-0 items-center justify-between border-b border-noctra-border bg-noctra-surface px-3 sm:px-6">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 font-semibold text-xs text-noctra-text">
+            <span className="text-noctra-muted">Shift:</span>
             <span className="font-mono text-noctra-accent font-bold">{formData.shiftEndTime}</span>
-            <span className="text-noctra-muted">&rarr; Target:</span>
+            <span className="text-noctra-muted">&rarr;</span>
             <span className="font-mono text-noctra-text font-bold">{formData.deadlineTime}</span>
           </div>
           {selectedCandidate?.plan_b && selectedCandidate.decision_by_iso && (
@@ -159,13 +174,13 @@ export function PlannerPage() {
 
         <div className="flex items-center gap-2">
           {/* Mobile View Switcher */}
-          <div className="flex rounded border border-noctra-border bg-noctra-raised p-0.5 md:hidden">
+          <div className="flex rounded-lg border border-noctra-border bg-noctra-raised p-0.5 md:hidden">
             <button
               type="button"
               onClick={() => setActiveTabMobile('routes')}
               className={cn(
-                'rounded px-2.5 py-1 text-xs font-semibold',
-                activeTabMobile === 'routes' ? 'bg-noctra-accent text-noctra-bg' : 'text-noctra-muted'
+                'rounded px-2.5 py-0.5 text-[11px] font-bold transition-colors',
+                activeTabMobile === 'routes' ? 'bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14]' : 'text-noctra-muted'
               )}
             >
               Routes
@@ -174,8 +189,8 @@ export function PlannerPage() {
               type="button"
               onClick={() => setActiveTabMobile('map')}
               className={cn(
-                'rounded px-2.5 py-1 text-xs font-semibold',
-                activeTabMobile === 'map' ? 'bg-noctra-accent text-noctra-bg' : 'text-noctra-muted'
+                'rounded px-2.5 py-0.5 text-[11px] font-bold transition-colors',
+                activeTabMobile === 'map' ? 'bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14]' : 'text-noctra-muted'
               )}
             >
               Map
@@ -184,11 +199,11 @@ export function PlannerPage() {
               type="button"
               onClick={() => setActiveTabMobile('details')}
               className={cn(
-                'rounded px-2.5 py-1 text-xs font-semibold',
-                activeTabMobile === 'details' ? 'bg-noctra-accent text-noctra-bg' : 'text-noctra-muted'
+                'rounded px-2.5 py-0.5 text-[11px] font-bold transition-colors',
+                activeTabMobile === 'details' ? 'bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14]' : 'text-noctra-muted'
               )}
             >
-              Details
+              Inputs
             </button>
           </div>
           <SimulatedBadge size="sm" />
@@ -196,11 +211,11 @@ export function PlannerPage() {
       </div>
 
       {/* Main 3-Column Layout */}
-      <div className="grid flex-1 grid-cols-1 overflow-hidden md:grid-cols-12">
+      <div className="grid flex-1 grid-cols-1 md:grid-cols-12 md:grid-rows-1 min-h-0 h-full overflow-hidden">
         {/* Left Column: Journey Form & Inputs (cols 1-3) */}
         <aside className={cn(
-          'flex-col border-r border-noctra-border bg-noctra-surface/50 p-4 overflow-y-auto md:col-span-3 md:flex',
-          activeTabMobile === 'routes' || activeTabMobile === 'details' ? 'flex' : 'hidden'
+          'flex-col border-r border-noctra-border bg-noctra-surface/50 p-4 overflow-y-auto md:col-span-3 h-full min-h-0',
+          activeTabMobile === 'details' ? 'flex' : 'hidden md:flex'
         )}>
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-xs font-bold uppercase tracking-wider text-noctra-text">
@@ -228,11 +243,11 @@ export function PlannerPage() {
 
         {/* Center Column: Map & Night Ribbon (cols 4-8) */}
         <section className={cn(
-          'relative flex flex-col overflow-hidden bg-noctra-bg md:col-span-5 md:flex',
+          'relative flex flex-col overflow-hidden bg-noctra-bg md:col-span-5 h-full min-h-0',
           activeTabMobile === 'map' ? 'flex' : 'hidden md:flex'
         )}>
           {/* Night Ribbon at top of Map */}
-          <div className="p-3 border-b border-noctra-border/60 z-10 bg-noctra-bg/95">
+          <div className="p-3 border-b border-noctra-border/60 z-10 bg-noctra-bg/95 shrink-0">
             <NightRibbon
               candidate={selectedCandidate}
               shiftEndTime={formData.shiftEndTime}
@@ -241,7 +256,7 @@ export function PlannerPage() {
           </div>
 
           {/* Interactive Map */}
-          <div className="relative flex-1">
+          <div className="relative flex-1 min-h-0 h-full w-full overflow-hidden">
             <MapView
               candidates={plan?.candidates || []}
               selectedId={selectedRouteId}
@@ -252,7 +267,7 @@ export function PlannerPage() {
             />
 
             {pickMode !== 'none' && (
-              <div className="absolute top-4 left-4 right-4 z-20 rounded-md bg-noctra-accent p-2.5 text-center text-xs font-semibold text-noctra-bg border border-noctra-border">
+              <div className="absolute top-4 left-4 right-4 z-20 rounded-md bg-noctra-accent p-2.5 text-center text-xs font-semibold text-noctra-bg border border-noctra-border shadow-lg">
                 Click anywhere on the map to set your {pickMode.toUpperCase()} location
               </div>
             )}
@@ -261,8 +276,8 @@ export function PlannerPage() {
 
         {/* Right Column: Route Options, Evidence & Intelligence (cols 9-12) */}
         <aside className={cn(
-          'flex-col border-l border-noctra-border bg-noctra-surface/40 p-4 overflow-y-auto space-y-4 md:col-span-4 md:flex',
-          activeTabMobile === 'routes' || activeTabMobile === 'details' ? 'flex' : 'hidden md:flex'
+          'flex-col border-l border-noctra-border bg-noctra-surface/40 p-4 overflow-y-auto space-y-4 md:col-span-4 h-full min-h-0',
+          activeTabMobile === 'routes' ? 'flex' : 'hidden md:flex'
         )}>
           {isLoading && <LoadingState count={3} />}
 
@@ -340,6 +355,13 @@ export function PlannerPage() {
         isOpen={selectedEvidence !== null}
         onClose={() => setSelectedEvidence(null)}
       />
+
+      {/* Live Turn-by-Turn Navigation Modal */}
+      <LiveTripModal
+        candidate={activeTrip}
+        onClose={() => setActiveTrip(null)}
+      />
     </div>
   );
 }
+

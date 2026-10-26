@@ -36,13 +36,13 @@ export function OfflineTiersSection() {
   ];
 
   return (
-    <section id="offline" className="border-b border-[#E2DED3] bg-[#FFFFFF] py-16 sm:py-24 lg:py-28">
+    <section id="offline" className="border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#131822] py-16 sm:py-24 lg:py-28 transition-colors">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
         <div className="max-w-[65ch] space-y-3 text-left mb-16">
-          <h2 className="text-3xl sm:text-[40px] font-bold tracking-[-0.01em] leading-[1.15] text-[#14181D]">
+          <h2 className="text-3xl sm:text-[40px] font-bold tracking-[-0.01em] leading-[1.15] text-[#14181D] dark:text-[#F8FAFC]">
             Three tiers of degraded.
           </h2>
-          <p className="text-base text-[#5B6672] leading-relaxed">
+          <p className="text-base text-[#5B6672] dark:text-[#94A3B8] leading-relaxed">
             Connectivity is volatile late at night. Noctra is engineered to gracefully degrade rather than crashing or showing a white screen.
           </p>
         </div>
@@ -50,27 +50,27 @@ export function OfflineTiersSection() {
         {/* Horizontal Three-Step Diagram Joined by a Thin Line with Nodes (No cards-with-icons) */}
         <div className="relative">
           {/* Connecting Line (Desktop) */}
-          <div className="hidden lg:block absolute top-3.5 left-[16%] right-[16%] h-[1px] bg-[#E2DED3]" />
+          <div className="hidden lg:block absolute top-3.5 left-[16%] right-[16%] h-[1px] bg-[#E2DED3] dark:bg-[#232C3E]" />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8 items-start">
             {steps.map((step, idx) => (
               <div key={step.tier} className="flex flex-col space-y-4 text-left">
                 {/* Node & Step Indicator */}
                 <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#12233A] bg-[#FFFFFF] font-mono text-xs font-bold text-[#12233A] shrink-0 z-10">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#12233A] dark:border-[#38BDF8] bg-[#FFFFFF] dark:bg-[#1A212E] font-mono text-xs font-bold text-[#12233A] dark:text-[#38BDF8] shrink-0 z-10">
                     {idx}
                   </div>
-                  <span className="font-mono text-xs font-semibold text-[#5B6672]">
+                  <span className="font-mono text-xs font-semibold text-[#5B6672] dark:text-[#94A3B8]">
                     {step.tier}
                   </span>
                 </div>
 
                 {/* Content */}
                 <div className="space-y-2">
-                  <h3 className="text-base font-semibold text-[#14181D] leading-snug">
+                  <h3 className="text-base font-semibold text-[#14181D] dark:text-[#F8FAFC] leading-snug">
                     {step.title}
                   </h3>
-                  <p className="text-xs leading-relaxed text-[#5B6672]">
+                  <p className="text-xs leading-relaxed text-[#5B6672] dark:text-[#94A3B8]">
                     {step.detail}
                   </p>
                 </div>

@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { Navbar } from '@/components/common/Navbar';
 import { EvidenceChip } from '@/components/common/EvidenceChip';
 import { NightRibbon } from '@/features/routes/NightRibbon';
@@ -78,9 +79,9 @@ export function TokensPage() {
 
                 <div className="pt-2 border-t border-[#E2DED3] flex justify-between items-center text-xs">
                   <span className="text-[#5B6672] font-mono">Max 3 items shown</span>
-                  <a href="/planner" className="font-semibold text-[#12233A] hover:underline">
+                  <Link to="/planner" className="font-semibold text-[#12233A] hover:underline">
                     View all departures →
-                  </a>
+                  </Link>
                 </div>
               </div>
 

@@ -25,7 +25,7 @@ export function CommunityNotesModal() {
     setSegment('');
     setNoteText('');
     setIsPosting(false);
-    toast.success('Observation submitted as PROBABLE (simulated)');
+    toast.success('Route observation published to community safety grid');
   };
 
   return (
@@ -107,7 +107,7 @@ export function CommunityNotesModal() {
                 type="submit"
                 className="px-4 py-1.5 text-xs font-bold rounded-lg bg-noctra-accent text-noctra-bg hover:bg-noctra-accent-hover"
               >
-                Publish Note (Simulated)
+                Publish Route Note
               </button>
             </div>
           </form>

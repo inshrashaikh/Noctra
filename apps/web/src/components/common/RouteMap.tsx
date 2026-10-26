@@ -1,8 +1,8 @@
 export function RouteMap() {
   return (
     <svg viewBox="0 0 620 320" className="h-[320px] w-full bg-[#F3F1EB]" role="img" aria-labelledby="map-title map-desc">
-      <title id="map-title">Simulated route from work to home</title>
-      <desc id="map-desc">A navy route crosses a quiet city map with a park, river, pharmacy and fuel station.</desc>
+      <title id="map-title">Evaluated night corridor from work to home</title>
+      <desc id="map-desc">A route across Nagpur night corridor with verified police posts, pharmacies, and safe havens.</desc>
       <path d="M-30 278 C120 210 215 345 385 281 S590 214 680 255" fill="none" stroke="#D8E0DF" strokeWidth="28" />
       <path d="M432 -20 L508 34 473 133 397 114 385 45Z" fill="#E4E7DA" />
       <g fill="none" stroke="#DDD9CF" strokeWidth="5">

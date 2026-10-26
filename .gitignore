@@ -1,5 +1,14 @@
 node_modules/
 dist/
+*.apk
+*.aab
+*.ap_
+apps/web/android/.gradle/
+apps/web/android/app/build/
+apps/web/android/build/
+apps/web/android/captures/
+apps/web/android/local.properties
+.android-sdk/
 .turbo/
 *.tsbuildinfo
 coverage/
@@ -12,4 +21,4 @@ playwright-report/
 __pycache__/
 *.pyc
 .venv/
-.agents/
+.agents/.tmp-pnpm/

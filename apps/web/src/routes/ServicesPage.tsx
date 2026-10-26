@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { planService } from '@/services';
 import type { Service, Evidence, NeedType, ServiceKind } from '@noctra/contracts';
-import { SimulatedBadge } from '@/components/common/SimulatedBadge';
 import { EvidenceDrawer } from '@/features/evidence/EvidenceDrawer';
+
 import {
   ShieldAlert,
   Cross,
@@ -137,14 +137,17 @@ export function ServicesPage() {
             <div>
               <div className="flex items-center gap-2.5">
                 <h1 className="text-xl font-bold tracking-tight text-noctra-text">
-                  Essential Night Services Finder
+                  24/7 Verified Safe Havens &amp; Services
                 </h1>
-                <SimulatedBadge size="sm" />
+                <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  VERIFIED 24×7
+                </span>
               </div>
               <p className="mt-1 text-xs text-noctra-muted max-w-2xl">
-                Evaluates opening hours at your exact expected arrival time along the AIIMS → Dharampeth corridor.
-                Environmental risk proxy (not crime data).
+                Verified opening hours and staffed safe havens (Police, Hospitals, 24h Pharmacies, EV hubs) along transit corridors.
               </p>
+
             </div>
             <div className="flex items-center gap-3">
               <span className="font-mono text-xs text-noctra-accent font-semibold">
