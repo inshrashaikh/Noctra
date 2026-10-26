@@ -1,6 +1,8 @@
 import { Navbar } from '@/components/common/Navbar';
 import { BottomNav } from '@/components/common/BottomNav';
 import { AlertsDrawer } from '@/features/alerts/AlertsDrawer';
+import { EmergencyChatbotModal } from '@/features/chatbot/EmergencyChatbotModal';
+import { FloatingSOSButton } from '@/features/chatbot/FloatingSOSButton';
 import { HeroSection } from './landing/HeroSection';
 import { ProblemSection } from './landing/ProblemSection';
 import { HowNoctraThinks } from './landing/HowNoctraThinks';
@@ -28,6 +30,8 @@ export function LandingPage() {
       <Footer />
       <BottomNav currentPath="/" />
       <AlertsDrawer />
+      <FloatingSOSButton />
+      <EmergencyChatbotModal />
     </div>
   );
 }

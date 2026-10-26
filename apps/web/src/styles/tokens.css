@@ -1,15 +1,16 @@
 /* Noctra Design Tokens — CSS Custom Properties */
 :root {
+  color-scheme: light;
   /* ── Colors ────────────────────────────────── */
-  --color-bg: #0F1419;
-  --color-surface: #171E26;
-  --color-raised: #1D2630;
-  --color-border: #26303B;
-  --color-text: #E8EDF2;
-  --color-muted: #9AA7B4;
-  --color-accent: #F2B54A;
-  --color-accent-hover: #E5A83D;
-  --color-accent-dim: rgba(242, 181, 74, 0.15);
+  --color-bg: #F7F6F2;
+  --color-surface: #FFFFFF;
+  --color-raised: #F1EFE8;
+  --color-border: #E2DED3;
+  --color-text: #14181D;
+  --color-muted: #5B6672;
+  --color-accent: #12233A;
+  --color-accent-hover: #1B3252;
+  --color-accent-dim: rgba(18, 35, 58, 0.08);
 
   /* Status labels */
   --color-known: #4FD1B5;
