@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light';
 
 interface ThemeState {
   theme: Theme;
@@ -8,38 +8,20 @@ interface ThemeState {
   toggleTheme: () => void;
 }
 
-function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  return (localStorage.getItem('noctra-theme') as Theme) || 'dark';
-}
-
-function applyTheme(theme: Theme) {
+function applyTheme() {
   if (typeof document === 'undefined') return;
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-  if (isDark) {
-    document.documentElement.classList.add('dark');
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-    document.documentElement.setAttribute('data-theme', 'light');
+  document.documentElement.classList.remove('dark');
+  document.documentElement.setAttribute('data-theme', 'light');
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('noctra-theme', 'light');
   }
 }
 
-export const useTheme = create<ThemeState>((set, get) => ({
-  theme: getInitialTheme(),
-  setTheme: (theme) => {
-    localStorage.setItem('noctra-theme', theme);
-    applyTheme(theme);
-    set({ theme });
-  },
-  toggleTheme: () => {
-    const current = get().theme;
-    const next: Theme = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('noctra-theme', next);
-    applyTheme(next);
-    set({ theme: next });
-  },
+// Immediately apply light theme
+applyTheme();
+
+export const useTheme = create<ThemeState>(() => ({
+  theme: 'light',
+  setTheme: () => applyTheme(),
+  toggleTheme: () => applyTheme(),
 }));

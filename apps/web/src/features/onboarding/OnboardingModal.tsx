@@ -68,7 +68,7 @@ export function OnboardingModal() {
 
   const handleFinish = () => {
     closeOnboarding();
-    router.navigate({ to: '/planner' });
+    router.navigate({ to: '/' });
   };
 
   const handleNext = () => {
@@ -81,6 +81,7 @@ export function OnboardingModal() {
 
   const handleSkip = () => {
     closeOnboarding();
+    router.navigate({ to: '/' });
   };
 
   return (

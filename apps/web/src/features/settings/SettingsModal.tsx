@@ -1,8 +1,7 @@
 import { useSettings } from './useSettings';
 import { useI18n, type Language } from '@/lib/i18n';
-import { useTheme } from '@/features/theme/useTheme';
 import type { TransportMode } from '@noctra/contracts';
-import { X, Globe, Type, Car, Bike, Footprints, Bus, HelpCircle, Shield, Sun, Moon, Laptop } from 'lucide-react';
+import { X, Globe, Type, Car, Bike, Footprints, Bus, HelpCircle, Shield } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 const MODE_OPTIONS: { id: TransportMode; label: string; icon: typeof Car }[] = [
@@ -14,7 +13,6 @@ const MODE_OPTIONS: { id: TransportMode; label: string; icon: typeof Car }[] = [
 ];
 
 export function SettingsModal() {
-  const { theme, setTheme } = useTheme();
   const {
     isSettingsOpen,
     setIsSettingsOpen,
@@ -140,37 +138,7 @@ export function SettingsModal() {
           </div>
         </div>
 
-        {/* Color Theme Selector */}
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-noctra-muted flex items-center gap-1.5">
-            <Sun className="h-4 w-4 text-noctra-accent" />
-            Display Appearance / थीम
-          </label>
-          <div className="grid grid-cols-3 gap-2">
-            {(
-              [
-                ['light', 'Light Mode', Sun],
-                ['dark', 'Dark Night', Moon],
-                ['system', 'System Auto', Laptop],
-              ] as const
-            ).map(([mode, label, Icon]) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setTheme(mode)}
-                className={cn(
-                  'flex flex-col items-center justify-center gap-1.5 rounded-xl border py-2.5 px-2 text-xs font-semibold transition-all select-none',
-                  theme === mode
-                    ? 'border-noctra-accent bg-noctra-accent/15 text-noctra-accent shadow-sm'
-                    : 'border-noctra-border bg-noctra-raised text-noctra-muted hover:border-noctra-muted'
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                <span>{label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+
 
         {/* Onboarding walkthrough re-trigger */}
         <div className="pt-2 border-t border-noctra-border/60 flex items-center justify-between">
