@@ -1,7 +1,9 @@
+import { Capacitor } from '@capacitor/core';
 import {
   createRouter,
   createRootRoute,
   createRoute,
+  createHashHistory,
   Outlet,
 } from '@tanstack/react-router';
 import { MarketingLayout } from '@/layouts/MarketingLayout';
@@ -74,7 +76,12 @@ const routeTree = rootRoute.addChildren([
   appRoute.addChildren([dashboardRoute, plannerRoute, servicesRoute]),
 ]);
 
-export const router = createRouter({ routeTree });
+// Hash history is required inside the Android WebView so client routes
+// resolve from the bundled index.html instead of a missing native path.
+export const router = createRouter({
+  routeTree,
+  ...(Capacitor.isNativePlatform() ? { history: createHashHistory() } : {}),
+});
 
 // Register router for type safety
 declare module '@tanstack/react-router' {
