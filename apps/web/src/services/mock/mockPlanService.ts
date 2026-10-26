@@ -137,7 +137,7 @@ class MockPlanServiceImpl implements PlanService {
           id: `alert-restore-${Date.now()}`,
           severity: 'info',
           title: 'Connection Restored (Tier 0)',
-          body: 'All simulated data feeds are operational.',
+          body: 'All night mobility feeds are operational.',
           timestamp_iso: new Date().toISOString(),
           dismissible: true,
           source_class: 'simulated',

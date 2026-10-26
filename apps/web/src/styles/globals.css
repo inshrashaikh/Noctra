@@ -38,6 +38,35 @@
   --space-card-title: 16px;
   --space-row: 12px;
   --size-row: 56px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+.dark, :root[data-theme="dark"] {
+  --color-bg: #0B0E14;
+  --color-surface: #131822;
+  --color-raised: #1A212E;
+  --color-border: #232C3E;
+  --color-border-strong: #3A4760;
+  --color-text: #F8FAFC;
+  --color-muted: #94A3B8;
+  --color-primary: #38BDF8;
+  --color-primary-hover: #0EA5E9;
+  --color-on-primary: #0B0E14;
+  --color-amber: #F59E0B;
+  --color-amber-text: #FBBF24;
+  --color-known: #10B981;
+  --color-known-bg: #064E3B;
+  --color-probable: #38BDF8;
+  --color-probable-bg: #0C4A6E;
+  --color-outdated: #F59E0B;
+  --color-outdated-bg: #451A03;
+  --color-unknown: #A855F7;
+  --color-unknown-bg: #3B0764;
+  --color-infeasible: #EF4444;
+  --shadow-raised: 0 1px 3px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.6);
 }
 
 @theme inline {

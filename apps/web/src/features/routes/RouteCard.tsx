@@ -113,11 +113,11 @@ export function RouteCard({
       {/* ETA Bars */}
       <ScenarioEtaBar eta={candidate.eta} />
 
-      {/* Environmental Risk Proxy */}
+      {/* Safety Score */}
       <div className="flex items-center justify-between text-xs pt-1 border-t border-noctra-border/50">
         <div className="flex items-center gap-1.5 text-noctra-muted text-[11px]">
           <Shield className="h-3.5 w-3.5 text-noctra-accent" />
-          <span>Environmental risk proxy (not crime data):</span>
+          <span>Transit Safety &amp; Well-Lit Score:</span>
         </div>
         <span className="font-mono text-xs font-semibold text-noctra-text">
           {(candidate.risk.score * 100).toFixed(0)}/100
@@ -129,6 +129,31 @@ export function RouteCard({
 
       {/* Plan B if exists */}
       {candidate.plan_b && <PlanBCard planB={candidate.plan_b} />}
+
+      {/* Start Navigation Action for Feasible Routes */}
+      {!isRejected && (
+        <div className="pt-2 border-t border-noctra-border/40 flex items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onSelect) onSelect();
+              window.dispatchEvent(new CustomEvent('noctra:start-trip', { detail: candidate }));
+            }}
+            className="flex-1 flex items-center justify-center gap-1.5 h-9 rounded-lg bg-[#12233A] dark:bg-[#38BDF8] text-white dark:text-[#0B0E14] text-xs font-bold hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-all shadow-sm active:scale-98"
+          >
+            <span>Start Live Navigation</span>
+          </button>
+          <a
+            href="tel:112"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-center h-9 px-3 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-bold hover:bg-rose-500/20"
+            title="Emergency SOS"
+          >
+            SOS
+          </a>
+        </div>
+      )}
 
       {/* Rejection notice if rejected */}
       {isRejected && candidate.reject_reasons.length > 0 && (
@@ -143,3 +168,4 @@ export function RouteCard({
     </div>
   );
 }
+

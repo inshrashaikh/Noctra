@@ -1,4 +1,6 @@
 import { Navbar } from '@/components/common/Navbar';
+import { BottomNav } from '@/components/common/BottomNav';
+import { AlertsDrawer } from '@/features/alerts/AlertsDrawer';
 import { HeroSection } from './landing/HeroSection';
 import { ProblemSection } from './landing/ProblemSection';
 import { HowNoctraThinks } from './landing/HowNoctraThinks';
@@ -13,7 +15,7 @@ import { Footer } from './landing/Footer';
  */
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#F7F6F2] text-[#14181D]">
+    <div className="min-h-screen bg-[#F7F6F2] dark:bg-[#0B0E14] text-[#14181D] dark:text-[#F8FAFC] pb-14 md:pb-0 transition-colors">
       <Navbar currentPath="/" />
       <main>
         <HeroSection />
@@ -24,6 +26,8 @@ export function LandingPage() {
         <FinalCta />
       </main>
       <Footer />
+      <BottomNav currentPath="/" />
+      <AlertsDrawer />
     </div>
   );
 }

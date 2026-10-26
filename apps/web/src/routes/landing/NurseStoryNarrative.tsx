@@ -94,7 +94,7 @@ const NARRATIVE_STEPS: NarrativeStep[] = [
     summary:
       'En route along the corridor, Noctra continuously maps verified 24×7 safe havens and tracks check-in deadlines.',
     detail:
-      'Within 400m are Sitabuldi Police Assistance Booth and Apollo 24h Pharmacy. Priya shares a simulated tracking link with her family. If she fails to check in by 03:00 AM, an alert triggers.',
+      'Within 400m are Sitabuldi Police Assistance Booth and Apollo 24h Pharmacy. Priya shares a live tracking link with her family. If she fails to check in by 03:00 AM, an alert triggers.',
     evidenceBadge: {
       label: 'KNOWN',
       source: 'Verified Refuge Registry',

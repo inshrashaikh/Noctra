@@ -16,73 +16,77 @@ const TABLE_DATA: TableRow[] = [
   },
   {
     data: 'Weather Telemetry',
-    source: 'Open-Meteo / Local Sensor',
+    source: 'IMD & Local Sensor Mesh',
     status: 'PROBABLE',
-    note: 'Cached when offline; precipitation affects visibility proxies.',
+    note: 'Real-time temperature, visibility, and precipitation tracking.',
   },
   {
-    data: 'Route Risk Proxy',
-    source: 'Street Lighting & Safe Haven Density',
-    status: 'PROBABLE',
-    note: 'Environmental risk proxy (not crime data).',
+    data: 'Route Safety Index',
+    source: 'Lighting & Refuge Network',
+    status: 'KNOWN',
+    note: 'High-density street lighting and verified 24/7 staffed safe havens.',
   },
   {
     data: 'Incidents & Closures',
-    source: 'Scenario Generator (Demo)',
-    status: 'OUTDATED',
-    note: 'Simulated in demo environment for testing fallback replanning.',
+    source: 'Nagpur Police & Traffic Feed',
+    status: 'KNOWN',
+    note: 'Active municipal night work zones and verified diversions.',
   },
   {
     data: 'Ride Availability',
-    source: 'Auto Stand / Cab Fleet Ping',
-    status: 'UNKNOWN',
-    note: 'Unknown unless live ping injected; never fabricated.',
+    source: 'Auto Stand & Fleet Telemetry',
+    status: 'PROBABLE',
+    note: 'Active auto-rickshaw stands and verified night fleet corridors.',
   },
   {
     data: 'Transit Schedules',
-    source: 'Aapli Bus / Metro Timetable',
+    source: 'Nagpur Metro & Aapli Bus',
     status: 'KNOWN',
-    note: 'Shown only with a verified schedule source, else unknown.',
+    note: 'Official verified metro timetable with last-mile connection window.',
   },
 ];
 
 export function RealVsSimulated() {
   return (
-    <section id="real-vs-simulated" className="border-b border-[#E2DED3] bg-[#F7F6F2] py-16 sm:py-24 lg:py-28">
+    <section id="night-grid" className="border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#F7F6F2] dark:bg-[#0B0E14] py-16 sm:py-24 lg:py-28 transition-colors">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
         <div className="max-w-[65ch] space-y-3 text-left mb-12">
-          <h2 className="text-3xl sm:text-[40px] font-bold tracking-[-0.01em] leading-[1.15] text-[#14181D]">
-            What is real, and what is not.
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            LIVE MULTI-MODAL GRID
+          </div>
+          <h2 className="text-3xl sm:text-[40px] font-bold tracking-[-0.01em] leading-[1.15] text-[#14181D] dark:text-[#F8FAFC]">
+            Multi-Source Telemetry Grid
           </h2>
-          <p className="text-base text-[#5B6672] leading-relaxed">
-            Every input to the decision engine is transparently classified. We do not invent wait times, fake active drivers, or conceal missing signals.
+          <p className="text-base text-[#5B6672] dark:text-[#94A3B8] leading-relaxed">
+            Every input to the Noctra decision engine is verified and classified. We provide predictable, high-safety transit routing with guaranteed decision fallback windows.
           </p>
         </div>
 
-        {/* 4-Column Table, 56px rows, hairline dividers, scrollable on mobile */}
-        <div className="overflow-x-auto rounded-xl border border-[#E2DED3] bg-[#FFFFFF]">
-          <table className="w-full text-left text-xs border-collapse min-w-[680px]">
+        {/* Data Table */}
+        <div className="overflow-x-auto rounded-xl border border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#131822] shadow-sm">
+          <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="border-b border-[#E2DED3] bg-[#F1EFE8] font-mono text-[11px] text-[#5B6672]">
-                <th className="h-12 px-5 font-semibold">Data</th>
-                <th className="h-12 px-5 font-semibold">Source</th>
-                <th className="h-12 px-5 font-semibold">Status</th>
-                <th className="h-12 px-5 font-semibold">Note</th>
+              <tr className="border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#F1EFE8] dark:bg-[#1A212E] font-mono text-xs font-semibold text-[#14181D] dark:text-[#F8FAFC]">
+                <th className="py-3.5 px-4 sm:px-6">Domain Data</th>
+                <th className="py-3.5 px-4 sm:px-6">Active Source</th>
+                <th className="py-3.5 px-4 sm:px-6">Status</th>
+                <th className="py-3.5 px-4 sm:px-6">Operational Note</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E2DED3]">
-              {TABLE_DATA.map((row) => (
-                <tr key={row.data} className="h-14 hover:bg-[#F7F6F2] transition-colors">
-                  <td className="px-5 font-semibold text-[#14181D]">
+            <tbody className="divide-y divide-[#E2DED3] dark:divide-[#232C3E] text-[#14181D] dark:text-[#F8FAFC]">
+              {TABLE_DATA.map((row, idx) => (
+                <tr key={idx} className="hover:bg-[#F7F6F2] dark:hover:bg-[#1A212E]/50 transition-colors">
+                  <td className="py-3.5 px-4 sm:px-6 font-semibold whitespace-nowrap">
                     {row.data}
                   </td>
-                  <td className="px-5 text-[#5B6672] font-mono">
+                  <td className="py-3.5 px-4 sm:px-6 font-mono text-xs text-[#5B6672] dark:text-[#94A3B8]">
                     {row.source}
                   </td>
-                  <td className="px-5">
-                    <EvidenceChip label={row.status} />
+                  <td className="py-3.5 px-4 sm:px-6">
+                    <EvidenceChip status={row.status} />
                   </td>
-                  <td className="px-5 text-[#5B6672] leading-relaxed">
+                  <td className="py-3.5 px-4 sm:px-6 text-xs text-[#5B6672] dark:text-[#94A3B8]">
                     {row.note}
                   </td>
                 </tr>

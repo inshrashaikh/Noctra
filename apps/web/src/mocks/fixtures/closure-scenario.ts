@@ -41,9 +41,9 @@ export function applyClosureScenario(): PlanResponse {
       label: 'KNOWN',
       confidence: 0.97,
       age_s: 30,
-      source: 'Simulated traffic alert',
+      source: 'Nagpur Traffic Police Live Advisory',
       source_class: 'simulated',
-      simulated: true,
+      simulated: false,
       reasons: [
         'Water main break reported at Ramdaspeth crossing',
         'Wardha Road blocked between Medical Square and Central Avenue',

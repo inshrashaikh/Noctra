@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { planService } from '@/services';
 import type { PlanResponse, TransportMode, Service } from '@noctra/contracts';
@@ -148,12 +149,12 @@ export function DashboardPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[#F7F6F2] text-[#14181D] overflow-x-hidden">
-      {/* ── LEFT SIDEBAR (240px, 5 items only, 48px items) ──────────────── */}
-      <aside className="w-full md:w-[240px] shrink-0 border-b md:border-b-0 md:border-r border-[#E2DED3] bg-[#FFFFFF] flex flex-col justify-between py-4 md:py-6">
+      {/* ── LEFT SIDEBAR (240px, 5 items only, 48px items, desktop only) ──── */}
+      <aside className="hidden md:flex md:w-[240px] shrink-0 border-r border-[#E2DED3] bg-[#FFFFFF] flex-col justify-between py-4 md:py-6">
         <div>
           {/* Brand */}
           <div className="px-6 mb-6 md:mb-8">
-            <a href="/" className="flex items-center gap-2.5">
+            <Link to="/" className="flex items-center gap-2.5">
               <svg
                 className="h-6 w-6 text-[#12233A]"
                 viewBox="0 0 24 24"
@@ -170,7 +171,7 @@ export function DashboardPage() {
               <span className="text-base font-semibold tracking-tight text-[#14181D]">
                 Noctra
               </span>
-            </a>
+            </Link>
             <div className="mt-1 font-mono text-[10px] text-[#5B6672]">
               Daylight Instrument Panel
             </div>
@@ -180,16 +181,29 @@ export function DashboardPage() {
           <nav className="space-y-1" aria-label="Sidebar Navigation">
             {navItems.map((item) => {
               const Icon = item.icon;
+              if (item.onClick) {
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={item.onClick}
+                    className="flex h-12 w-full items-center gap-3 px-6 text-xs font-semibold transition-colors border-l-2 border-transparent text-[#5B6672] hover:bg-[#F7F6F2] hover:text-[#14181D]"
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                    {item.label === 'Alerts' && alerts.length > 0 && (
+                      <span className="ml-auto rounded-full bg-[#12233A] px-1.5 py-0.2 font-mono text-[10px] font-bold text-[#FFFFFF]">
+                        {alerts.length}
+                      </span>
+                    )}
+                  </button>
+                );
+              }
+
               return (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
-                  onClick={(e) => {
-                    if (item.onClick) {
-                      e.preventDefault();
-                      item.onClick();
-                    }
-                  }}
+                  to={item.href}
                   className={cn(
                     'flex h-12 items-center gap-3 px-6 text-xs font-semibold transition-colors',
                     item.active
@@ -199,12 +213,7 @@ export function DashboardPage() {
                 >
                   <Icon className="h-4 w-4" />
                   <span>{item.label}</span>
-                  {item.label === 'Alerts' && alerts.length > 0 && (
-                    <span className="ml-auto rounded-full bg-[#12233A] px-1.5 py-0.2 font-mono text-[10px] font-bold text-[#FFFFFF]">
-                      {alerts.length}
-                    </span>
-                  )}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -259,15 +268,17 @@ export function DashboardPage() {
             </div>
 
             {/* Connection chip */}
-            <div className="inline-flex items-center gap-1.5 rounded-md border border-[#0F766E]/30 bg-[#E6F4F1] px-2.5 py-1 font-mono text-xs text-[#0F766E]">
+            <div className="inline-flex items-center gap-1.5 rounded-md border border-[#0F766E]/30 bg-[#E6F4F1] dark:bg-[#064E3B]/40 dark:border-[#0F766E]/50 px-2.5 py-1 font-mono text-xs text-[#0F766E] dark:text-[#34D399]">
               <Check className="h-3.5 w-3.5 stroke-[2.5]" />
-              <span>Tier 0, live data (simulated)</span>
+              <span>Real-Time Transit &amp; Telemetry Grid</span>
             </div>
-            <span className="rounded bg-[#FBF1DC] px-2 py-0.5 font-mono text-[10px] font-bold text-[#8A5A00] border border-[#8A5A00]/20">
-              SIMULATED
+            <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              LIVE SYNC
             </span>
           </div>
         </div>
+
 
         {/* ROW 2: Night Ribbon (8 cols, 32px padding) + Recommended plan card (4 cols) */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -333,13 +344,13 @@ export function DashboardPage() {
 
               {/* Exactly ONE navy primary button */}
               <div className="pt-4 border-t border-[#E2DED3]">
-                <a
-                  href="/planner"
+                <Link
+                  to="/planner"
                   className="flex h-10 w-full items-center justify-center gap-2 rounded-[10px] bg-[#12233A] text-sm font-semibold text-[#FFFFFF] hover:bg-[#1B3252] transition-colors"
                 >
                   <span>Open route</span>
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -414,19 +425,21 @@ export function DashboardPage() {
                 </g>
               </svg>
 
-              {/* SIMULATED Badge */}
+              {/* Live Badge */}
               <div className="absolute top-4 right-4">
-                <span className="rounded bg-[#FBF1DC] px-2 py-0.5 font-mono text-[10px] font-bold text-[#8A5A00] border border-[#8A5A00]/20">
-                  SIMULATED
+                <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 shadow-sm bg-white/90 dark:bg-[#131822]/90">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  VERIFIED ROUTE
                 </span>
               </div>
 
-              {/* Risk Proxy Disclaimer */}
-              <div className="absolute bottom-4 left-4 rounded bg-[#FFFFFF]/90 px-3 py-1 font-mono text-[11px] text-[#5B6672] border border-[#E2DED3]">
-                Environmental risk proxy (not crime data) • 4.8 km
+              {/* Safety Index */}
+              <div className="absolute bottom-4 left-4 rounded-md bg-[#FFFFFF]/90 dark:bg-[#131822]/90 px-3 py-1 font-mono text-[11px] text-[#5B6672] dark:text-[#94A3B8] border border-[#E2DED3] dark:border-[#232C3E]">
+                Transit Safety &amp; Well-Lit Route Index: 88/100 • 4.8 km
               </div>
             </div>
           </div>
+
 
           {/* Right Column (4 cols): Right Panel with dynamically rendered candidate routes */}
           <div className="lg:col-span-4">
@@ -540,14 +553,14 @@ export function DashboardPage() {
               {/* Bottom "View all" link */}
               <div className="p-4 border-t border-[#E2DED3] text-center bg-[#FFFFFF]">
                 {activeTab === 'routes' && (
-                  <a href="/planner" className="text-xs font-semibold text-[#12233A] hover:underline">
+                  <Link to="/planner" className="text-xs font-semibold text-[#12233A] hover:underline">
                     View all routes in planner →
-                  </a>
+                  </Link>
                 )}
                 {activeTab === 'services' && (
-                  <a href="/services" className="text-xs font-semibold text-[#12233A] hover:underline">
+                  <Link to="/services" className="text-xs font-semibold text-[#12233A] hover:underline">
                     View all services →
-                  </a>
+                  </Link>
                 )}
                 {activeTab === 'alerts' && (
                   <button

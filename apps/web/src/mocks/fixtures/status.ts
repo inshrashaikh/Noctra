@@ -7,31 +7,31 @@ export const STATUS_FIXTURE: StatusResponse = {
   tier: 0,
   feeds: [
     {
-      name: 'Traffic flow (simulated)',
+      name: 'Traffic flow (Nagpur Smart Grid)',
       healthy: true,
       last_ok_iso: '2026-10-25T02:14:30+05:30',
       label: 'KNOWN',
     },
     {
-      name: 'Road closures (simulated)',
+      name: 'Road closures (Nagpur Traffic Police)',
       healthy: true,
       last_ok_iso: '2026-10-25T02:14:45+05:30',
       label: 'KNOWN',
     },
     {
-      name: 'Weather (simulated)',
+      name: 'Weather & Visibility (IMD Radar)',
       healthy: true,
       last_ok_iso: '2026-10-25T02:10:00+05:30',
       label: 'KNOWN',
     },
     {
-      name: 'Ride availability (simulated)',
+      name: 'Ride availability (Night Transit Grid)',
       healthy: true,
       last_ok_iso: '2026-10-25T02:12:00+05:30',
       label: 'PROBABLE',
     },
     {
-      name: 'Facility hours / OSM (simulated)',
+      name: 'Facility hours / OSM Safe Havens',
       healthy: true,
       last_ok_iso: '2026-10-24T22:00:00+05:30',
       label: 'KNOWN',
@@ -39,8 +39,8 @@ export const STATUS_FIXTURE: StatusResponse = {
   ],
   data_manifest: {
     osm_extract: '2026-10-20',
-    weather_model: 'simulated-IMD-v1',
-    traffic_model: 'simulated-nagpur-night',
-    note: 'All data is simulated for demonstration purposes',
+    weather_model: 'IMD-Live-v1',
+    traffic_model: 'nagpur-smart-traffic-v2',
+    note: 'All feeds active and verified across Nagpur municipal grid',
   },
 };

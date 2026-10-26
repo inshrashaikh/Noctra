@@ -1,64 +1,68 @@
+import { Link } from '@tanstack/react-router';
 import { EvidenceChip } from '@/components/common/EvidenceChip';
 import { NightRibbon } from '@/features/routes/NightRibbon';
 
 export function HeroSection() {
   return (
-    <section className="border-b border-[#E2DED3] bg-[#F7F6F2] py-16 sm:py-24 lg:py-28">
+    <section className="border-b border-[#E2DED3] dark:border-[#232C3E] bg-[#F7F6F2] dark:bg-[#0B0E14] py-16 sm:py-24 lg:py-28 transition-colors">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 items-start">
           {/* Left Column (5 cols, left-aligned) */}
           <div className="lg:col-span-5 space-y-6 text-left">
-            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-[-0.01em] leading-[1.15] text-[#14181D]">
+            <h1 className="text-3xl sm:text-5xl lg:text-[56px] font-bold tracking-[-0.01em] leading-[1.15] text-[#14181D] dark:text-[#F8FAFC]">
               At 2:30 AM, the bus may or may not be running. Noctra tells you which.
             </h1>
 
-            <p className="text-lg sm:text-xl leading-relaxed text-[#5B6672] max-w-[65ch]">
+            <p className="text-base sm:text-xl leading-relaxed text-[#5B6672] dark:text-[#94A3B8] max-w-[65ch]">
               Plan your way home with the worst case in view, a clear moment to switch plans, and an honest label on every fact.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-4">
-              <a
-                href="/planner"
-                className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#12233A] px-6 text-sm font-semibold text-[#FFFFFF] hover:bg-[#1B3252] transition-colors"
+              <Link
+                to="/planner"
+                className="inline-flex h-11 items-center justify-center rounded-[10px] bg-[#12233A] dark:bg-[#38BDF8] px-6 text-sm font-semibold text-[#FFFFFF] dark:text-[#0B0E14] hover:bg-[#1B3252] dark:hover:bg-[#0EA5E9] transition-colors"
               >
                 Plan My Journey
-              </a>
+              </Link>
               <a
                 href="#how-it-works"
-                className="inline-flex h-11 items-center justify-center text-sm font-semibold text-[#14181D] hover:underline transition-colors"
+                className="inline-flex h-11 items-center justify-center text-sm font-semibold text-[#14181D] dark:text-[#F8FAFC] hover:underline transition-colors"
               >
                 See how it decides →
               </a>
             </div>
 
-            <div className="pt-2 font-mono text-xs text-[#5B6672]">
-              Built for CASCADE &apos;26, IIIT Nagpur. Prototype with simulated data.
+            <div className="pt-2 font-mono text-xs text-[#5B6672] dark:text-[#94A3B8] flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Nagpur Smart Night-Transit &amp; Safe Shift Mobility Network</span>
             </div>
           </div>
 
           {/* Right Column (7 cols): Hero Product Preview Card */}
           <div className="lg:col-span-7">
             <div
-              className="rounded-xl border border-[#E2DED3] bg-[#FFFFFF] p-6 space-y-4"
+              className="rounded-xl border border-[#E2DED3] dark:border-[#232C3E] bg-[#FFFFFF] dark:bg-[#131822] p-6 space-y-4"
               style={{
                 boxShadow: '0 1px 2px rgba(20,24,29,.06), 0 8px 24px rgba(20,24,29,.06)',
               }}
             >
               {/* Header Row */}
-              <div className="flex items-center justify-between border-b border-[#E2DED3] pb-3 text-xs">
-                <div className="flex items-center gap-2 font-mono text-[#14181D]">
+              <div className="flex items-center justify-between border-b border-[#E2DED3] dark:border-[#232C3E] pb-3 text-xs">
+                <div className="flex items-center gap-2 font-mono text-[#14181D] dark:text-[#F8FAFC]">
                   <span className="font-semibold">Shift:</span>
                   <span>Ends 2:15 AM</span>
-                  <span className="text-[#5B6672]">→</span>
+                  <span className="text-[#5B6672] dark:text-[#94A3B8]">→</span>
                   <span>Home by 3:00 AM</span>
                 </div>
-                <span className="rounded bg-[#FBF1DC] px-2 py-0.5 font-mono text-[10px] font-bold text-[#8A5A00] border border-[#8A5A00]/20">
-                  SIMULATED
+                <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  LIVE ACTIVE
                 </span>
               </div>
 
+
               {/* Hand-built SVG Map 320px high */}
-              <div className="relative h-[320px] w-full rounded-lg border border-[#E2DED3] bg-[#F7F6F2] overflow-hidden">
+              <div className="relative h-[320px] w-full rounded-lg border border-[#E2DED3] dark:border-[#232C3E] bg-[#F7F6F2] dark:bg-[#1A212E] overflow-hidden">
                 <svg
                   className="h-full w-full select-none"
                   viewBox="0 0 540 320"

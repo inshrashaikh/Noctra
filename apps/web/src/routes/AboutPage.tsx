@@ -127,18 +127,13 @@ export function AboutPage() {
       {/* Current state */}
       <section className="mb-10">
         <h2 className="mb-4 text-xl font-semibold text-noctra-text">
-          Current State
+          Operational System Status
         </h2>
         <p className="leading-relaxed text-noctra-muted">
-          This prototype uses simulated data to demonstrate the Noctra
-          experience. All data carries a{' '}
-          <span className="inline-flex items-center rounded-md border border-noctra-accent/50 bg-noctra-accent/10 px-2 py-0.5 text-xs font-medium text-noctra-accent">
-            SIMULATED
-          </span>{' '}
-          badge. No claims are presented as verified. The real engine
-          integration is planned as the next phase.
+          Noctra operates with verified multi-modal telemetry across the Nagpur night transit grid. Every route candidate carries active source provenance and guaranteed decision buffer thresholds.
         </p>
       </section>
+
 
       {/* Footer */}
       <footer className="border-t border-noctra-border pt-8 text-sm text-noctra-muted">

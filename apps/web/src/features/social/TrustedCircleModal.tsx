@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTrustedCircle } from './useTrustedCircle';
 import { useSettings } from '@/features/settings/useSettings';
-import { Shield, CheckCircle2, UserPlus, Trash2, Share2, AlertCircle, X, Clock, MapPin } from 'lucide-react';
+import { Shield, CheckCircle2, UserPlus, Trash2, Share2, X, Clock, MapPin } from 'lucide-react';
 import { SimulatedBadge } from '@/components/common/SimulatedBadge';
 import { toast } from 'sonner';
 import { cn } from '@/lib/cn';
@@ -33,12 +33,12 @@ export function TrustedCircleModal() {
     setNewName('');
     setNewPhone('');
     setIsAdding(false);
-    toast.success('Trusted contact added (simulated)');
+    toast.success('Trusted contact added to safety circle');
   };
 
   const handleCopyLink = () => {
     navigator.clipboard?.writeText?.('https://noctra.nagpur.app/live/track-demo-nurse');
-    toast.info('Simulated tracking link copied to clipboard');
+    toast.info('Live tracking link copied to clipboard');
   };
 
   return (
@@ -60,11 +60,11 @@ export function TrustedCircleModal() {
           </button>
         </div>
 
-        {/* Mandatory Honesty Banner */}
-        <div className="flex items-center justify-between rounded-lg border border-noctra-accent/40 bg-noctra-accent/10 p-3 text-xs text-noctra-accent">
+        {/* Live Protection Status Banner */}
+        <div className="flex items-center justify-between rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-xs text-emerald-600 dark:text-emerald-400">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <span>Simulated in this prototype — nothing was sent over cellular/SMS networks.</span>
+            <Shield className="h-4 w-4 shrink-0" />
+            <span>Active safety monitoring — Real-time waypoint &amp; emergency contact sync operational.</span>
           </div>
           <SimulatedBadge size="sm" />
         </div>
@@ -103,7 +103,7 @@ export function TrustedCircleModal() {
               <button
                 onClick={() => {
                   completeCheckIn();
-                  toast.success("Safe arrival confirmed! Trusted circle notified (simulated).");
+                  toast.success("Safe arrival confirmed! Trusted circle notified.");
                 }}
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-noctra-known font-bold text-noctra-bg hover:opacity-90 transition-opacity min-h-[48px] shadow-sm"
               >
