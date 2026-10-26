@@ -1,4 +1,4 @@
-import { ShieldAlert, WifiOff } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import { useEmergencyChatbot } from './useEmergencyChatbot';
 import { cn } from '@/lib/cn';
 
@@ -16,25 +16,21 @@ export function FloatingSOSButton({ className }: FloatingSOSButtonProps) {
       type="button"
       onClick={() => openChat()}
       className={cn(
-        'fixed bottom-18 md:bottom-6 right-4 z-40 flex items-center gap-2 rounded-full border border-noctra-infeasible/50 bg-[#0B0E14] hover:bg-[#131822] px-3.5 py-2.5 shadow-2xl transition-all duration-200 active:scale-95 group cursor-pointer hover:border-noctra-infeasible',
+        'fixed bottom-20 md:bottom-6 right-4 z-40 flex items-center gap-2 rounded-xl border border-rose-500/40 bg-[#0B0E14] hover:bg-[#131822] px-3 py-2 text-xs font-semibold shadow-lg hover:shadow-rose-950/30 transition-all duration-150 active:scale-95 group cursor-pointer hover:border-rose-500',
         className
       )}
       aria-label="Open Offline SOS Emergency Assistant"
     >
-      <div className="relative flex items-center justify-center">
-        <span className="absolute -inset-0.5 rounded-full bg-noctra-infeasible opacity-60 animate-ping" />
-        <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-noctra-infeasible text-white shadow-md">
-          <ShieldAlert className="h-4 w-4" />
-        </div>
+      <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/40">
+        <ShieldAlert className="h-3.5 w-3.5" />
       </div>
 
-      <div className="flex flex-col text-left">
-        <span className="text-xs font-bold text-white group-hover:text-noctra-infeasible transition-colors">
-          SOS Guide
+      <div className="flex items-center gap-1.5 font-mono text-[11px]">
+        <span className="font-bold text-white group-hover:text-rose-400 transition-colors">
+          112 SOS Guide
         </span>
-        <span className="flex items-center gap-1 text-[9px] font-mono text-[#94A3B8]">
-          <WifiOff className="h-2.5 w-2.5 text-[#38BDF8]" />
-          Offline Chat
+        <span className="text-[9px] text-[#38BDF8] bg-[#38BDF8]/10 px-1 rounded">
+          Offline
         </span>
       </div>
     </button>

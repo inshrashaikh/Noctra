@@ -279,23 +279,19 @@ export function PlannerPage() {
 
                 {/* En-Route Waypoint Safety Timeline for Selected Candidate */}
                 {selectedCandidate && (
-                  <div className="rounded-2xl border border-noctra-border bg-noctra-surface p-4 sm:p-5 shadow-sm">
-                    <RouteStageTimeline
-                      candidate={selectedCandidate}
-                      shiftEndTime={formData.shiftEndTime}
-                      deadlineTime={formData.deadlineTime}
-                    />
-                  </div>
+                  <RouteStageTimeline
+                    candidate={selectedCandidate}
+                    shiftEndTime={formData.shiftEndTime}
+                    deadlineTime={formData.deadlineTime}
+                  />
                 )}
 
                 {/* Freshness Audit Meter */}
-                <div className="rounded-2xl border border-noctra-border bg-noctra-surface p-4 sm:p-5 shadow-sm">
-                  <FreshnessMeter evidenceList={allEvidence} />
-                </div>
+                <FreshnessMeter evidenceList={allEvidence} />
 
                 {/* Selected Candidate Claims / Evidence Chips */}
                 {selectedCandidate && (
-                  <div className="rounded-2xl border border-noctra-border bg-noctra-surface p-4 sm:p-5 space-y-3 shadow-sm">
+                  <div className="rounded-xl border border-noctra-border bg-noctra-surface p-3.5 space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-noctra-text">
                         Epistemic Evidence Base ({selectedCandidate.evidence.length})
@@ -315,12 +311,10 @@ export function PlannerPage() {
                 )}
 
                 {/* Decision Explanation Engine */}
-                <div className="rounded-2xl border border-noctra-border bg-noctra-surface p-4 sm:p-5 shadow-sm">
-                  <ExplanationPanel
-                    explanation={plan.explanation}
-                    missingInformation={plan.missing_information}
-                  />
-                </div>
+                <ExplanationPanel
+                  explanation={plan.explanation}
+                  missingInformation={plan.missing_information}
+                />
 
                 {/* En-route Services on Mobile (only below routes on mobile) */}
                 <div className="block lg:hidden">

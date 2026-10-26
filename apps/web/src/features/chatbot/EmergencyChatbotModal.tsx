@@ -90,20 +90,20 @@ export function EmergencyChatbotModal() {
         {/* Rapid SOS Quick Dial Bar */}
         <div className="flex items-center justify-between bg-noctra-infeasible/15 border-b border-noctra-infeasible/30 px-4 py-2 shrink-0">
           <div className="flex items-center gap-1.5 text-xs text-white">
-            <span className="h-2 w-2 rounded-full bg-noctra-infeasible animate-ping" />
+            <span className="h-2 w-2 rounded-full bg-rose-500" />
             <span className="font-bold text-noctra-infeasible">Direct SOS Dial:</span>
           </div>
           <div className="flex items-center gap-2">
             <a
               href="tel:112"
-              className="flex items-center gap-1 rounded bg-noctra-infeasible hover:bg-noctra-infeasible/90 px-2.5 py-1 text-xs font-bold text-white shadow-sm transition-transform active:scale-95"
+              className="flex items-center gap-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 px-3 py-1 text-xs font-bold text-white shadow-sm transition-all active:scale-95"
             >
               <PhoneCall className="h-3 w-3" />
               <span>Call 112 (Police)</span>
             </a>
             <a
               href="tel:1091"
-              className="flex items-center gap-1 rounded bg-[#232C3E] hover:bg-[#334155] border border-[#475569] px-2.5 py-1 text-xs font-bold text-[#38BDF8] shadow-sm transition-transform active:scale-95"
+              className="flex items-center gap-1.5 rounded-lg bg-[#1E293B] hover:bg-[#334155] border border-[#38BDF8]/40 px-3 py-1 text-xs font-bold text-[#38BDF8] shadow-sm transition-all active:scale-95"
             >
               <PhoneCall className="h-3 w-3" />
               <span>Call 1091 (Women)</span>
